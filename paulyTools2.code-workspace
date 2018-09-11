@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../paulyTools"
+		},
+		{
+			"path": "../../test/houghton2018"
+		}
+	],
+	"settings": {}
+}
