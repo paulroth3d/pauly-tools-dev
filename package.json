@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "paulyTools2",
   "version": "0.3.0",
-  "description": "A sample Node.js app using Express 4",
+  "description": "A simple set of web tools to play around with",
   "engines": {
     "node": "8.9.1"
   },
@@ -11,10 +11,26 @@
     "test": "node test/test.js"
   },
   "dependencies": {
+    "body-parser": "1.18.3",
+    "config": "2.0.1",
     "ejs": "^2.5.6",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "path": "0.12.7",
+    "q": "1.5.1"
   },
   "devDependencies": {
+    "ajv": "6.5.2",
+    "babel-core": "6.26.3",
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-babel": "7.0.1",
+    "gulp-clean-css": "3.10.0",
+    "gulp-eslint": "5.0.0",
+    "gulp-plumber": "1.2.0",
+    "gulp-sass": "4.0.1",
+    "gulp-uglify": "3.0.1",
     "request": "^2.81.0",
     "tape": "^4.7.0"
   },
@@ -27,5 +43,6 @@
     "heroku",
     "express"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "optionalDependencies": {}
 }
