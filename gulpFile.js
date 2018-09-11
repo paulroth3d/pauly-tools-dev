@@ -9,8 +9,11 @@ gulp.task('default', function(){
 });
 
 //-- useful for verifying a command running
-gulp.task('say-hello', function(){
+//-- support async completion
+//-- https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async
+gulp.task('say-hello', function(done){
     console.log('hello');
+    done();
 });
 
 //-- run a linter against javascript
