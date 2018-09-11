@@ -46,3 +46,9 @@ gulp.task('sass', function(){
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('src/public/stylesheets'));
 })
+
+//-- chains
+//-- https://fettblog.eu/gulp-4-parallel-and-series/
+
+//-- include series once we have a good set of linters.
+gulp.task('lint', gulp.series('eslint','sass'));

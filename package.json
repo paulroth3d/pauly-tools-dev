@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
+    "lint": "node node_modules/gulp/bin/gulp.js lint",
     "test": "node test/test.js"
   },
   "dependencies": {
