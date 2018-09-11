@@ -1,0 +1,23 @@
+.container {
+    position: relative;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+#title {
+    position:relative;
+    font-size:100px;
+    z-index: 10;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: rgba(0, 0, 0, 1) 0px 0px 4px;
+}
+.color-block {
+    position: absolute;
+    width: 100%;
+    bottom:0px;
+    z-index: 5;
+height: .4em;
+}
+.timer-block {
+    margin: 10px;
+}
