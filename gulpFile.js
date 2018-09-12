@@ -3,7 +3,7 @@ const plumber = require('gulp-plumber');
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
 
-gulp.task('default', function(){
+gulp.task('watch', function(){
     gulp.watch('src/public/stylesheets/**/*.scss', gulp.series('sass'));
     gulp.watch('src/**/*.js', gulp.series('eslint'));
 });
@@ -55,3 +55,4 @@ gulp.task('sass', function(){
 
 //-- include series once we have a good set of linters.
 gulp.task('lint', gulp.series('eslint','sass'));
+gulp.task('default', gulp.series('watch'));
