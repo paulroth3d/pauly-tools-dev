@@ -2,10 +2,17 @@ const gulp = require('gulp');
 const plumber = require('gulp-plumber');
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
+const webpack = require('webpack-stream');
 
 gulp.task('watch', function(){
     gulp.watch('src/public/stylesheets/**/*.scss', gulp.series('sass'));
     gulp.watch('src/**/*.js', gulp.series('eslint'));
+});
+
+gulp.task('webpack', function() {
+    return gulp.src('src/entry.js')
+        .pipe(webpack())
+        .pipe(gulp.dest('dist/'));
 });
 
 //-- useful for verifying a command running
