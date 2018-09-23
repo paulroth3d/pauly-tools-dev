@@ -3,6 +3,7 @@ const plumber = require('gulp-plumber');
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
 const webpack = require('webpack-stream');
+const path = require('path');
 
 gulp.task('watch', function(){
     gulp.watch('src/public/stylesheets/**/*.scss', gulp.series('sass'));
@@ -13,6 +14,11 @@ gulp.task('webpack', function() {
     return gulp.src('./src/public/entry.js')
         .pipe(webpack( require('./webpack.config.js')))
         .pipe(gulp.dest('./src/public/'));
+});
+
+gulp.task('run-webpack', (done) => {
+    console.log('trying to run webpack');
+    done();
 });
 
 //-- useful for verifying a command running
