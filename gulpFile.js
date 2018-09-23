@@ -11,7 +11,14 @@ gulp.task('watch', function(){
 
 gulp.task('webpack', function() {
     return gulp.src('src/entry.js')
-        .pipe(webpack())
+        .pipe(webpack({
+            watch: true,
+            module: {
+                rules: [
+                    { test: /\.css$/, loader: 'style!css' },
+                ],
+            },
+        }))
         .pipe(gulp.dest('dist/'));
 });
 
