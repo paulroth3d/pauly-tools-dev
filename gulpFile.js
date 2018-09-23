@@ -10,16 +10,9 @@ gulp.task('watch', function(){
 });
 
 gulp.task('webpack', function() {
-    return gulp.src('src/entry.js')
-        .pipe(webpack({
-            watch: true,
-            module: {
-                rules: [
-                    { test: /\.css$/, loader: 'style!css' },
-                ],
-            },
-        }))
-        .pipe(gulp.dest('dist/'));
+    return gulp.src('./src/public/entry.js')
+        .pipe(webpack( require('./webpack.config.js')))
+        .pipe(gulp.dest('./src/public/'));
 });
 
 //-- useful for verifying a command running
