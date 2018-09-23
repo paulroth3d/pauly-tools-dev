@@ -11,3 +11,6 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 src/public/bundle*
+
+# Ignore generated public folder
+src/public/**/*
