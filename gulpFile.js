@@ -5,23 +5,68 @@ const sass = require('gulp-sass');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const path = require('path');
+const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 
 gulp.task('watch', function(){
-    gulp.watch('src/public/stylesheets/**/*.scss', gulp.series('sass'));
-    gulp.watch('src/**/*.js', gulp.series('eslint'));
+    gulp.watch('src/siteSrc/stylesheets/**/*.scss', gulp.series('sass'));
+    gulp.watch('src/siteSrc/**/*.js', gulp.series(['eslint','webpack']));
 });
 
 gulp.task('webpack', (done) => {
     console.log('trying to run webpack');
 
-    const node_env = process.env.NODE_ENV;
-    console.log(`node_env: ${node_env}`);
-    //done();
+    let webpackConfig = {
+        entry: './script/page/titlePage.js',
+        output: {
+            path: path.resolve(__dirname, "./src/public/"),
+            filename: 'bundle.js'
+        },
+        context: path.resolve(__dirname, "./src/siteSrc/"),
+        devtool: 'source-map',
+        mode: 'development',
+        module: {
+            rules: [
+                {
+                    test: /\.css$/,
+                    use: [
+                        { loader: 'style-loader' },
+                        { loader: 'css-loader' }
+                    ]
+                },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        'style-loader',
+                        'css-loader',
+                        'sass-loader'
+                    ]
+                },
+                {
+                    test: /\.js$/,
+                    loader: 'eslint-loader',
+                    exclude: [ /node_modules/ ], //, '/src/siteSrc/script/lib/'
+                    enforce: 'pre',
+                    options: {
+                        formatter: eslintFriendlyFormatter,
+                        configFile: path.resolve(__dirname, './eslint.json'),
+                        cache: false,
+                    }
+                },
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    exclude: [ /node_modules/ ], //, '/src/siteSrc/script/lib/'
+                }
+            ]
+        }
+    };
+    
+    //-- make any tweaks between production and development...
+    const node_env = process.env.NODE_ENV || 'development';
+    webpackConfig.mode = node_env;
 
-    const webpackConfig = require('./webpack.config');
     console.log(JSON.stringify(webpackConfig));
 
-    
     webpack(webpackConfig, (err, stats) => {
         if (err){
             console.error('Webpack', err);
@@ -32,7 +77,6 @@ gulp.task('webpack', (done) => {
         }
     });
     
-
     /*
     //-- unfortunately, webpack-stream requires
     //-- we send in specific configurations from gulp
@@ -55,8 +99,8 @@ gulp.task('say-hello', function(done){
 //-- run a linter against javascript
 gulp.task('eslint', function(){
     return gulp.src([
-        'src/**/*.js',
-        '!src/public/scripts/lib/**/*.js'
+        'src/siteSrc/**/*.js',
+        '!src/siteSrc/script/lib/**/*.js'
     ])
     .pipe(plumber({
         errorHandler: function( error ){
@@ -74,7 +118,7 @@ gulp.task('eslint', function(){
 //-- converts sass (scss) files to css
 gulp.task('sass', function(){
     return gulp.src([
-        'src/public/stylesheets/**/*.scss'
+        'src/siteSrc/style/**/*.scss'
     ])
     .pipe(plumber({
         errorHandler: function( error ){
@@ -83,7 +127,7 @@ gulp.task('sass', function(){
         }
     }))
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('src/public/stylesheets'));
+    .pipe(gulp.dest('src/public/style'));
 })
 
 //-- chains
