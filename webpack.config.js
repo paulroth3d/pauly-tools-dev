@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = {
+let config = {
     entry: path.resolve(__dirname, './src/public/entry.js'),
     output: {
         path: path.resolve(__dirname, "./src/public/"),
@@ -20,4 +20,10 @@ module.exports = {
             }
         ]
     }
-}
+};
+
+//-- make any tweaks between production and development...
+const node_env = process.env.NODE_ENV || 'development';
+config.mode = node_env;
+
+module.exports = config;

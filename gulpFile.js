@@ -2,7 +2,8 @@ const gulp = require('gulp');
 const plumber = require('gulp-plumber');
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
-const webpack = require('webpack-stream');
+const webpackStream = require('webpack-stream');
+const webpack = require('webpack');
 const path = require('path');
 
 gulp.task('watch', function(){
@@ -10,15 +11,37 @@ gulp.task('watch', function(){
     gulp.watch('src/**/*.js', gulp.series('eslint'));
 });
 
-gulp.task('webpack', function() {
-    return gulp.src('./src/public/entry.js')
-        .pipe(webpack( require('./webpack.config.js')))
-        .pipe(gulp.dest('./src/public/'));
-});
-
-gulp.task('run-webpack', (done) => {
+gulp.task('webpack', (done) => {
     console.log('trying to run webpack');
-    done();
+
+    const node_env = process.env.NODE_ENV;
+    console.log(`node_env: ${node_env}`);
+    //done();
+
+    const webpackConfig = require('./webpack.config');
+    console.log(JSON.stringify(webpackConfig));
+
+    
+    webpack(webpackConfig, (err, stats) => {
+        if (err){
+            console.error('Webpack', err);
+            done();
+        } else {
+            console.log(stats.toString());
+            done();
+        }
+    });
+    
+
+    /*
+    //-- unfortunately, webpack-stream requires
+    //-- we send in specific configurations from gulp
+    //-- overwriting configs in webpack config
+    
+    return gulp.src('./src/public/entry.js')
+        .pipe(webpackStream( require('./webpack.config.js')))
+        .pipe(gulp.dest('./src/public/'));
+    */
 });
 
 //-- useful for verifying a command running
