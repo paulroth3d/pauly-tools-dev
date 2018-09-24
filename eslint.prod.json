@@ -1,10 +1,6 @@
 {
 	"extends": "airbnb-base",
 	"rules": {
-		//-- development rules
-		"no-console": ["off"],
-		"no-unused-vars": ["off"],
-		//-- production rules
 		"no-trailing-spaces": ["error", { "skipBlankLines": true, "ignoreComments": true }],
 		"spaced-comment": ["error", "always", {
 			"line": {
@@ -16,8 +12,7 @@
 				"balanced": true
 			}
 		}],
-		"no-debugger": "warn",
-		"import/no-extraneous-dependencies": ["off"],
-		"prefer-const": "warn"
+		"no-debugger": "error",
+		"import/no-extraneous-dependencies": ["off"]
 	}
 }
