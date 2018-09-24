@@ -13,6 +13,7 @@
     "watch-internal": "node node_modules/gulp/bin/gulp.js watch-internal",
     "lint": "node node_modules/gulp/bin/gulp.js lint",
     "lint-internal": "node node_modules/gulp/bin/gulp.js lint-internal",
+    "pre-deploy-check": "NODE_ENV=\"production\" npm run watch",
     "test": "node test/test.js",
     "compile": "node node_modules/gulp/bin/gulp.js webpack"
   },
