@@ -12,13 +12,6 @@ function handleBaseRedirect(req, resp) {
   resp.redirect(redirectURL);
 }
 
-/**
- * Redirect for the title page
- */
-function handleTitlePageRequest(req, resp) {
-  resp.render('pages/index');
-}
-
 //-- investigate further
 //-- react / node / express / webpack
 //-- https://hackernoon.com/full-stack-web-application-using-react-node-js-express-and-webpack-97dbd5b9d708
@@ -36,6 +29,7 @@ express()
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', handleBaseRedirect)
-  .get('/example', (req, res) => res.render('pages/index'))
-  .get('/titlePage', handleTitlePageRequest)
+  .get('/heroku', (req, res) => res.render('pages/heroku'))
+  .get('/javascript', (req, res) => res.render('pages/exampleJavascript'))
+  .get('/react', (req, res) => res.render('pages/exampleReact'))
   .listen(PORT, () => console.log(`Listening on ${PORT}`));

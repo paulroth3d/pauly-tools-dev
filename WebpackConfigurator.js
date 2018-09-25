@@ -14,15 +14,31 @@ function configureWebpack(configParams) {
   });
   
   const webpackConfig = {
-    entry: './script/page/titlePage.js',
+    entry: {
+      exampleReact: './script/app/exampleReactApp.js',
+      exampleJavascript: './script/app/exampleJavascriptApp.js'
+    },
     output: {
       path: path.resolve(__dirname, './src/public/'),
-      filename: 'bundle.js',
+      filename: '[name].js',
     },
     context: path.resolve(__dirname, './src/siteSrc/'),
+
+    /** include sourcemaps for debugging */
     devtool: 'source-map',
+
+    /** Current development mode.
+     * Overwritten by node_env passed by config
+     * */
     mode: 'development',
+
+    /**
+     * Whether to continually build based on watch.
+     * Overwritten by watch passed by config
+     */
     watch: configSettings.watch,
+
+    /** build rules */
     module: {
       rules: [
         {
@@ -48,6 +64,9 @@ function configureWebpack(configParams) {
           test: /\.js$/,
           loader: 'babel-loader',
           exclude: [/node_modules/],
+          options: {
+            presets: ['env', 'react'],
+          },
         },
       ],
     },
@@ -56,7 +75,6 @@ function configureWebpack(configParams) {
   //-- make any tweaks between production and development...
   webpackConfig.mode = configSettings.node_env;
 
-  console.log(`eslint: ${configSettings.eslint}`);
   if (configSettings.eslint) {
     let esLintPath = './eslint.json';
     if (configSettings.node_env === 'production') {

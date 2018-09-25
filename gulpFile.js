@@ -76,10 +76,7 @@ gulp.task('watch', (done) => {
 gulp.task(
   'lint-internal',
   () => {
-    const scriptStream = gulp.src([
-      'local_modules/**/*.js',
-      'gulpFile.js',
-    ])
+    const scriptStream = gulp.src(['./*.js', 'src/*.js', 'src/local_modules/**/*.js'])
       .pipe(plumber({
         errorHandler: (error) => {
           console.error(error.message);
@@ -93,19 +90,19 @@ gulp.task(
       .pipe(eslint.failAfterError());
 
     return scriptStream;
-  },
+  }
 );
 
 gulp.task(
   'watch-internal',
   () => {
     const scriptStream = gulp.watch(
-      ['gulpFile.js', 'local_modules/**/*.js'],
-      gulp.series(['lint-internal']),
+      ['./*.js', 'src/*.js', 'src/local_modules/**/*.js'],
+      gulp.series(['lint-internal'])
     );
 
     return scriptStream;
-  },
+  }
 );
 
 //-- chains

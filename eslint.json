@@ -18,6 +18,18 @@
 		}],
 		"no-debugger": "warn",
 		"import/no-extraneous-dependencies": ["off"],
-		"prefer-const": "warn"
+		"prefer-const": "warn",
+		"comma-dangle": "off",
+		"class-methods-use-this": "off"
+	},
+	"env": {
+		"browser": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
 	}
 }
