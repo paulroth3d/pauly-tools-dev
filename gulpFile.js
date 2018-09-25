@@ -26,6 +26,12 @@ gulp.task('say-hello', (done) => {
 });
 */
 
+gulp.task('view-webpack-config', (done) => {
+  const webpackConfig = WebpackConfigurator.configureWebpack();
+  console.log(JSON.stringify(webpackConfig, null, 2));
+  done();
+});
+
 gulp.task('webpack', (done) => {
   console.log('trying to run webpack');
 
