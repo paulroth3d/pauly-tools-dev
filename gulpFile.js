@@ -6,6 +6,7 @@ const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const path = require('path');
 const WebpackConfigurator = require('./WebpackConfigurator');
+const gulpReactDocs = require('gulp-react-docs');
 
 /*
 gulp.task('test-webpack', (done) => {
@@ -110,6 +111,21 @@ gulp.task(
     return scriptStream;
   }
 );
+
+gulp.task( 'doc', (done) => {
+  console.log('writing documentation');
+
+  var docsDest = 'docs';
+
+  const scriptStream = gulp.src('./src/siteSrc/script/components/**/*.jsx')
+    .pipe(gulpReactDocs({
+      path: docsDest
+    }))
+    .pipe(gulp.dest(docsDest));
+
+  console.log('before done');
+  done();
+});
 
 //-- chains
 //-- https://fettblog.eu/gulp-4-parallel-and-series/
