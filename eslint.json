@@ -22,6 +22,12 @@
 		"comma-dangle": "off",
 		"class-methods-use-this": "off"
 	},
+	"extends": [
+		"standard-react"
+	],
+	"plugins": [
+		"react"
+	],
 	"env": {
 		"browser": true
 	},

@@ -14,5 +14,21 @@
 		}],
 		"no-debugger": "error",
 		"import/no-extraneous-dependencies": ["off"]
+	},
+	"extends": [
+		"standard-react"
+	],
+	"plugins": [
+		"react"
+	],
+	"env": {
+		"browser": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
 	}
 }
