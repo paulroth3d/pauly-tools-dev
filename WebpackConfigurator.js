@@ -1,5 +1,6 @@
 const path = require('path');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const underscore = require('underscore');
 
 /**
@@ -70,6 +71,15 @@ function configureWebpack(configParams) {
         },
       ],
     },
+
+    plugins: [
+      new CopyWebpackPlugin(
+        [
+          { from: './src/siteSrc/*', to: './src/public' }
+        ],
+        { copyUnmodified: true }
+      )
+    ]
   };
 
   //-- make any tweaks between production and development...
