@@ -20,5 +20,13 @@
 		"terminal.integrated.env.windows": {
 			"SFDX_SET_CLIENT_IDS": "sfdx-vscode"
 		}
-	}
+	},
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${file}"
+        }
+    ]
 }
