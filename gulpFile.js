@@ -1,14 +1,17 @@
 const gulp = require('gulp');
 const plumber = require('gulp-plumber');
 const eslint = require('gulp-eslint');
-const sass = require('gulp-sass');
-const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const path = require('path');
 const WebpackConfigurator = require('./WebpackConfigurator');
 const LiveReload = require('livereload');
+
+let webpackServer;
 let LiveReloadServer;
 
+//-- deprecated plugins no longer needed
+// const sass = require('gulp-sass');
+// const webpackStream = require('webpack-stream');
 
 /*
 gulp.task('test-webpack', (done) => {
@@ -62,22 +65,6 @@ gulp.task('webpack', (done) => {
   */
 });
 
-gulp.task('livereload', (done) => {
-  console.log('starting livereload');
-
-  const liveReloadConfig = {
-
-  };
-
-  liveReloadServer = LiveReload.createServer(liveReloadConfig,
-    () => {
-      console.log('liveReloadServer called back');
-      // console.log(arguments);
-    }
-  );
-  liveReloadServer.watch( path.resolve(__dirname + "/src/public/**/*"));
-  done();
-});
 
 gulp.task('watch', (done) => {
   console.log('run webpack with watch');
@@ -87,16 +74,48 @@ gulp.task('watch', (done) => {
   });
   console.log(JSON.stringify(webpackConfig));
 
-  webpack(webpackConfig, (err, stats) => {
-    if (err) {
-      console.error('Webpack', err);
-      done();
-    } else {
-      console.log('Webpack completed compiling');
-      // console.log(stats.toString());
-      done();
-    }
+  //-- see here for the livereload config settings and startup
+  //-- https://www.npmjs.com/package/livereload
+  const liveReloadConfig = {};
+
+  const webpackPromise = new Promise((resolve, reject) => {
+    webpackServer = webpack(webpackConfig, (err, stats) => {
+      if (err) {
+        console.error('Webpack', err);
+        reject('Error loading webpack...');
+      } else {
+        console.log('Webpack completed compiling...');
+        // console.log(stats.toString());
+
+        resolve('Everything loaded');
+      }
+    });
   });
+
+  const liveReloadPromise = new Promise((resolve, reject) => {
+    liveReloadServer = LiveReload.createServer(liveReloadConfig,
+      () => {
+        console.log('liveReloadServer ready');
+        // console.log(arguments);
+        resolve('live reload server loaded');
+      }
+    );
+    liveReloadServer.watch( path.resolve(__dirname + "/src/public/**/*"));
+  });
+
+  Promise.all([webpackPromise, liveReloadPromise])
+    .then((message) => {
+      console.log('Everything has loaded');
+      console.log('Files are available for `heroku local web`');
+      console.log('(Likely run in a separate tab)');
+      done();
+    })
+    .catch((message) => {
+      console.log('Error occurred when loading liveserver and webpack.');
+      console.log(message);
+      console.log('\n\n\nYou will likely need to Exit (Ctrl-C) and restart.');
+      done();
+    })
 });
 
 //-- run a linter against javascript
