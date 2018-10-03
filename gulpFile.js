@@ -6,7 +6,9 @@ const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const path = require('path');
 const WebpackConfigurator = require('./WebpackConfigurator');
-const gulpReactDocs = require('gulp-react-docs');
+const LiveReload = require('livereload');
+let LiveReloadServer;
+
 
 /*
 gulp.task('test-webpack', (done) => {
@@ -58,6 +60,23 @@ gulp.task('webpack', (done) => {
     .pipe(webpackStream( require('./webpack.config.js')))
     .pipe(gulp.dest('./src/public/'));
   */
+});
+
+gulp.task('livereload', (done) => {
+  console.log('starting livereload');
+
+  const liveReloadConfig = {
+
+  };
+
+  liveReloadServer = LiveReload.createServer(liveReloadConfig,
+    () => {
+      console.log('liveReloadServer called back');
+      // console.log(arguments);
+    }
+  );
+  liveReloadServer.watch( path.resolve(__dirname + "/src/public/**/*"));
+  done();
 });
 
 gulp.task('watch', (done) => {
@@ -112,21 +131,6 @@ gulp.task(
     return scriptStream;
   }
 );
-
-gulp.task( 'doc', (done) => {
-  console.log('writing documentation');
-
-  var docsDest = 'docs';
-
-  const scriptStream = gulp.src('./src/siteSrc/script/components/**/*.jsx')
-    .pipe(gulpReactDocs({
-      path: docsDest
-    }))
-    .pipe(gulp.dest(docsDest));
-
-  console.log('before done');
-  done();
-});
 
 //-- chains
 //-- https://fettblog.eu/gulp-4-parallel-and-series/
