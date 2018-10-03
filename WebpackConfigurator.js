@@ -75,9 +75,14 @@ function configureWebpack(configParams) {
     plugins: [
       new CopyWebpackPlugin(
         [
-          { from: './src/siteSrc/public/**/*', to: './src/serverSrc/public' }
+          { 
+            test: /\.png$/,
+            from: './src/siteSrc/public/**/*',
+            to: './src/serverSrc/public',
+            force: true
+          }
         ],
-        { copyUnmodified: true }
+        { debug: 'debug', copyUnmodified: true }
       )
     ]
   };
