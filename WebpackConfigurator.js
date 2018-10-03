@@ -20,7 +20,7 @@ function configureWebpack(configParams) {
       exampleJavascript: './script/app/exampleJavascriptApp.js'
     },
     output: {
-      path: path.resolve(__dirname, './src/public/'),
+      path: path.resolve(__dirname, './src/serverSrc/public/'),
       filename: '[name].js',
     },
     context: path.resolve(__dirname, './src/siteSrc/'),
@@ -75,7 +75,7 @@ function configureWebpack(configParams) {
     plugins: [
       new CopyWebpackPlugin(
         [
-          { from: './src/siteSrc/*', to: './src/public' }
+          { from: './src/siteSrc/public/**/*', to: './src/serverSrc/public' }
         ],
         { copyUnmodified: true }
       )

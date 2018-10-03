@@ -25,8 +25,8 @@ function handleBaseRedirect(req, resp) {
 //-- http://ccoenraets.github.io/es6-tutorial/
 
 express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
+  .use(express.static(path.resolve(__dirname, 'public')))
+  .set('views', path.join(__dirname, './'))
   .set('view engine', 'ejs')
   .get('/', handleBaseRedirect)
   .get('/heroku', (req, res) => res.render('pages/heroku'))

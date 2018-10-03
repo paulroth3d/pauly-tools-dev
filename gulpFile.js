@@ -59,9 +59,9 @@ gulp.task('webpack', (done) => {
   //-- we send in specific configurations from gulp
   //-- overwriting configs in webpack config
   
-  return gulp.src('./src/public/entry.js')
+  return gulp.src('./src/serverSrc/public/entry.js')
     .pipe(webpackStream( require('./webpack.config.js')))
-    .pipe(gulp.dest('./src/public/'));
+    .pipe(gulp.dest('./src/serverSrc/public/'));
   */
 });
 
@@ -85,7 +85,7 @@ gulp.task('watch', (done) => {
         reject('Error loading webpack...');
       } else {
         console.log('Webpack completed compiling...');
-        // console.log(stats.toString());
+        console.log(stats.toString());
 
         resolve('Everything loaded');
       }
@@ -100,7 +100,7 @@ gulp.task('watch', (done) => {
         resolve('live reload server loaded');
       }
     );
-    liveReloadServer.watch( path.resolve(__dirname + "/src/public/**/*"));
+    liveReloadServer.watch( path.resolve(__dirname + "/src/serverSrc/public/**/*"));
   });
 
   Promise.all([webpackPromise, liveReloadPromise])
@@ -122,7 +122,7 @@ gulp.task('watch', (done) => {
 gulp.task(
   'lint-internal',
   () => {
-    const scriptStream = gulp.src(['./*.js', 'src/*.js', 'src/local_modules/**/*.js'])
+    const scriptStream = gulp.src(['./*.js', 'src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'])
       .pipe(plumber({
         errorHandler: (error) => {
           console.error(error.message);
@@ -143,7 +143,7 @@ gulp.task(
   'watch-internal',
   () => {
     const scriptStream = gulp.watch(
-      ['./*.js', 'src/*.js', 'src/local_modules/**/*.js'],
+      ['./*.js', 'src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'],
       gulp.series(['lint-internal'])
     );
 

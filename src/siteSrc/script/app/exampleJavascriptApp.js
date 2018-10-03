@@ -12,3 +12,5 @@ const displayTime = `The current time is: ${currentTime}`;
 
 document.write(`<div id='title' class="clock">${message}</div>`);
 document.write(`<div class='clock'>${displayTime}</div>`);
+
+

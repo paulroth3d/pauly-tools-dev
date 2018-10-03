@@ -5,9 +5,9 @@
   "engines": {
     "node": "8.9.1"
   },
-  "main": "index.js",
+  "main": "src/serverSrc/index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node src/serverSrc/index.js",
     "postinstall": "npm run compile",
     "view-webpack-config": "node node_modules/gulp/bin/gulp.js view-webpack-config",
     "watch": "node node_modules/gulp/bin/gulp.js watch",
