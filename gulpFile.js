@@ -73,7 +73,8 @@ gulp.task('watch', (done) => {
       console.error('Webpack', err);
       done();
     } else {
-      console.log(stats.toString());
+      console.log('Webpack completed compiling');
+      // console.log(stats.toString());
       done();
     }
   });
