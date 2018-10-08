@@ -7,6 +7,8 @@ const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const underscore = require('underscore');
 
+const config = require('config');
+
 /**
  * determines a list of all the app files
  */
@@ -21,8 +23,9 @@ function listAppFiles(){
   const appFiles = fs.readdirSync(appPath);
   const jsMatcher = /(.*)\.js$/;
   let match;
-  for (let fileName of appFiles) {
-    //console.log('appFile:' + fileName);
+  let filename;
+  for ( fileName of appFiles) {
+    // console.log('appFile:' + fileName);
     if (fileName) {
       match = fileName.match(jsMatcher);
       if (match) {
@@ -46,10 +49,8 @@ function configureWebpack(configParams) {
   });
   
   const webpackConfig = {
-    entry: {
-      //exampleReact: './script/app/exampleReactApp.js',
-      //exampleJavascript: './script/app/exampleJavascriptApp.js'
-    },
+    //-- entries are defined dynamically down below based on the script/app folder
+    entry: {},
     output: {
       path: path.resolve(__dirname, './src/serverSrc/public/'),
       filename: '[name].js',
@@ -102,11 +103,10 @@ function configureWebpack(configParams) {
         },
       ],
     },
-
     plugins: [
       new CopyWebpackPlugin(
         [
-          { 
+          {
             test: /\.png$/,
             from: './src/siteSrc/public/**/*',
             to: './src/serverSrc/public',
@@ -121,15 +121,22 @@ function configureWebpack(configParams) {
   //-- dynamically include any routes based on script/apps
   const appFiles = listAppFiles();
   const appPath = './script/app/';
-  for (let appFile of appFiles) {
+  let appFile;
+  for (appFile of appFiles) {
     webpackConfig.entry[appFile] = appPath + appFile + '.js';
   }
+  /*
+  @POSTCONDITION: the routes are based off the name of the files under script/app
+  ex: entry: {
+    exampleReact: './script/app/exampleReact.js',
+    exampleJavascript: './script/app/exampleJavascript.js'
+  },
+  */
 
-  console.log('webpackConfig'); console.log(webpackConfig.entry);
-
-  //-- make any tweaks between production and development...
+  //-- set the mode the same as NODE_ENV
   webpackConfig.mode = configSettings.node_env;
 
+  //-- include eslint configs if eslint param was sent
   if (configSettings.eslint) {
     let esLintPath = './eslint.json';
     if (configSettings.node_env === 'production') {
@@ -148,6 +155,8 @@ function configureWebpack(configParams) {
       },
     });
   }
+
+  //console.log('Webpack config generated. To see the values run `npm run view-webpack-config`');
 
   return webpackConfig;
 }
