@@ -24,12 +24,15 @@ function handleBaseRedirect(req, resp) {
 //-- http://ccoenraets.github.io/es6-tutorial-data/babel-webpack/
 //-- http://ccoenraets.github.io/es6-tutorial/
 
-express()
+const expressServer = express()
   .use(express.static(path.resolve(__dirname, 'public')))
   .set('views', path.join(__dirname, './'))
   .set('view engine', 'ejs')
   .get('/', handleBaseRedirect)
   .get('/heroku', (req, res) => res.render('pages/heroku'))
   .get('/javascript', (req, res) => res.render('pages/exampleJavascript'))
-  .get('/react', (req, res) => res.render('pages/exampleReact'))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+  .get('/react', (req, res) => res.render('pages/exampleReact'));
+
+//-- anything more than providing a renderer to a page should be handled in its own separate module.
+
+expressServer.listen(PORT, () => console.log(`Listening on ${PORT}`));

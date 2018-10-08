@@ -1,10 +1,28 @@
 const gulp = require('gulp');
+/** Handle errors to avoid watch from breaking */
 const plumber = require('gulp-plumber');
+/** Support linting */
 const eslint = require('gulp-eslint');
+/** Compressor (not used for server) */
 const webpack = require('webpack');
+/** handles paths to files */
 const path = require('path');
-const WebpackConfigurator = require('./WebpackConfigurator');
+/** handles any file access info */
+const fs = require('fs-extra');
+/** Provides JS to refresh the browser on changes (used only for dev) */
 const LiveReload = require('livereload');
+/** nodemon server - used for watch */
+const Nodemon = require('nodemon');
+
+/** Configurator to generate Webpack configurations */
+const WebpackConfigurator = require('./WebpackConfigurator');
+/** configuration for live reload
+ *  <p>see here for the livereload config settings and startup</p>
+ *  <p>https://www.npmjs.com/package/livereload</p>
+ **/
+const LiveReloadConfig = require('./liveReload.config');
+/** nodemon config */
+const NodemonConfig = require('./nodemon.json');
 
 let webpackServer;
 let LiveReloadServer;
@@ -74,10 +92,6 @@ gulp.task('watch', (done) => {
   });
   console.log(JSON.stringify(webpackConfig));
 
-  //-- see here for the livereload config settings and startup
-  //-- https://www.npmjs.com/package/livereload
-  const liveReloadConfig = {};
-
   const webpackPromise = new Promise((resolve, reject) => {
     webpackServer = webpack(webpackConfig, (err, stats) => {
       if (err) {
@@ -93,7 +107,7 @@ gulp.task('watch', (done) => {
   });
 
   const liveReloadPromise = new Promise((resolve, reject) => {
-    liveReloadServer = LiveReload.createServer(liveReloadConfig,
+    liveReloadServer = LiveReload.createServer({},
       () => {
         console.log('liveReloadServer ready');
         // console.log(arguments);
@@ -103,7 +117,24 @@ gulp.task('watch', (done) => {
     liveReloadServer.watch( path.resolve(__dirname + "/src/serverSrc/public/**/*"));
   });
 
-  Promise.all([webpackPromise, liveReloadPromise])
+  const nodemonPromise = new Promise((resolve, reject) => {
+    nodemonServer = Nodemon(NodemonConfig);
+    nodemonServer.on('start', () => {
+      console.log('nodemon started');
+      resolve('nodemon server has started');
+    }).on('quit', () => {
+      console.log('nodemon has quit');
+    }).on('restart', (files) => {
+      console.log('Nodemon restarted due to:' + files);
+      console.log('liveReload.refresh:' + (typeof liveReloadServer.refresh));
+      //setTimeout(() => {
+        liveReloadServer.refresh("");
+        //liveReloadServer.alert("cuca");
+      //}, 1000);
+    });
+  })
+
+  Promise.all([webpackPromise, liveReloadPromise, nodemonPromise])
     .then((message) => {
       console.log('Everything has loaded');
       console.log('Files are available for `heroku local web`');

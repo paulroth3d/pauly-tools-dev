@@ -1,7 +1,38 @@
+/** resolving local file addresses */
 const path = require('path');
+/** other scripts for handling local file */
+const fs = require('fs-extra');
+
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const underscore = require('underscore');
+
+/**
+ * determines a list of all the app files
+ */
+function listAppFiles(){
+  const results = [];
+
+  const appPath = './src/siteSrc/script/app';
+  if (!fs.existsSync(appPath)) {
+    console.error('appDir does not exist');
+    throw new Error('appDir does not exist');
+  }
+  const appFiles = fs.readdirSync(appPath);
+  const jsMatcher = /(.*)\.js$/;
+  let match;
+  for (let fileName of appFiles) {
+    //console.log('appFile:' + fileName);
+    if (fileName) {
+      match = fileName.match(jsMatcher);
+      if (match) {
+        results.push(match[1]);
+      }
+    }
+  }
+
+  return results;
+}
 
 /**
  * Generate the base webpack configuration
@@ -16,8 +47,8 @@ function configureWebpack(configParams) {
   
   const webpackConfig = {
     entry: {
-      exampleReact: './script/app/exampleReactApp.js',
-      exampleJavascript: './script/app/exampleJavascriptApp.js'
+      //exampleReact: './script/app/exampleReactApp.js',
+      //exampleJavascript: './script/app/exampleJavascriptApp.js'
     },
     output: {
       path: path.resolve(__dirname, './src/serverSrc/public/'),
@@ -86,6 +117,15 @@ function configureWebpack(configParams) {
       )
     ]
   };
+
+  //-- dynamically include any routes based on script/apps
+  const appFiles = listAppFiles();
+  const appPath = './script/app/';
+  for (let appFile of appFiles) {
+    webpackConfig.entry[appFile] = appPath + appFile + '.js';
+  }
+
+  console.log('webpackConfig'); console.log(webpackConfig.entry);
 
   //-- make any tweaks between production and development...
   webpackConfig.mode = configSettings.node_env;

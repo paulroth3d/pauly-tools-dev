@@ -49,3 +49,18 @@ https://storybook.js.org/basics/guide-react/
 
 styleguidist
 https://react-styleguidist.js.org/
+
+## TODO
+
+use the config file to remove constants out of the scripts
+make the configurator more global
+	storybook configurator / webpack configurator / livereload configurator
+Automate assigning the routes to webpack.
+	review
+support typescript
+	(would prefer server too but needed for site)
+	https://webpack.js.org/guides/typescript/
+	http://www.typescriptlang.org/docs/handbook/react-&-webpack.html
+support nodemon
+	https://github.com/remy/nodemon
+	(include in the watcher)
