@@ -14,6 +14,11 @@ const LiveReload = require('livereload');
 /** nodemon server - used for watch */
 const Nodemon = require('nodemon');
 
+const config = require('config');
+
+//-- the server port is something special - get it so we can tell the user where to go
+const SERVER_PORT = process.env.PORT || config.DEFAULT.PORT;
+
 /** Configurator to generate Webpack configurations */
 const WebpackConfigurator = require('./WebpackConfigurator');
 /** configuration for live reload
@@ -53,6 +58,21 @@ gulp.task('say-hello', (done) => {
 gulp.task('view-webpack-config', (done) => {
   const webpackConfig = WebpackConfigurator.configureWebpack();
   console.log(JSON.stringify(webpackConfig, null, 2));
+  done();
+});
+
+gulp.task('view-livereload-config', (done) => {
+  console.log(JSON.stringify(LiveReloadConfig, null, 2));
+  done();
+});
+
+gulp.task('view-nodemon-config', (done) => {
+  console.log(JSON.stringify(NodemonConfig, null, 2));
+  done();
+});
+
+gulp.task('view-styleguide-config', (done) => {
+  console.log(JSON.stringify(require('./styleguide.config'), null, 2));
   done();
 });
 
@@ -125,20 +145,26 @@ gulp.task('watch', (done) => {
     }).on('quit', () => {
       console.log('nodemon has quit');
     }).on('restart', (files) => {
-      console.log('Nodemon restarted due to:' + files);
-      console.log('liveReload.refresh:' + (typeof liveReloadServer.refresh));
-      //setTimeout(() => {
+      gulp.task('lint-server')((err) => {
+        console.log('lint-server finished');
+        if(err){
+          console.error('error',err);
+        }
         liveReloadServer.refresh("");
-        //liveReloadServer.alert("cuca");
-      //}, 1000);
+      });
     });
   })
 
   Promise.all([webpackPromise, liveReloadPromise, nodemonPromise])
     .then((message) => {
-      console.log('Everything has loaded');
-      console.log('Files are available for `heroku local web`');
-      console.log('(Likely run in a separate tab)');
+      console.log('Everything has loaded:');
+      console.log(' * linting files in src/siteSrc');
+      console.log(' * linting express files in src/serverSrc');
+      console.log(' * running liveReload for changes in either');
+      console.log('To see the webpack config - run `npm run view-webpack-config`');
+      console.log('To see the liveReload config - run `npm run view-livereload-config');
+      console.log('To view the nodemon config - run `npm run view-nodemon-config');
+      console.log(`You can now browse to your site on http://localhost:${SERVER_PORT}/`);
       done();
     })
     .catch((message) => {
@@ -153,7 +179,7 @@ gulp.task('watch', (done) => {
 gulp.task(
   'lint-internal',
   () => {
-    const scriptStream = gulp.src(['./*.js', 'src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'])
+    const scriptStream = gulp.src(['./*.js'])
       .pipe(plumber({
         errorHandler: (error) => {
           console.error(error.message);
@@ -174,8 +200,41 @@ gulp.task(
   'watch-internal',
   () => {
     const scriptStream = gulp.watch(
-      ['./*.js', 'src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'],
+      ['./*.js'],
       gulp.series(['lint-internal'])
+    );
+
+    return scriptStream;
+  }
+);
+
+
+gulp.task(
+  'lint-server',
+  () => {
+    const scriptStream = gulp.src(['src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'])
+      .pipe(plumber({
+        errorHandler: (error) => {
+          console.error(error.message);
+          scriptStream.emit('end');
+        },
+      }))
+      .pipe(eslint({
+        configFile: 'eslint.json',
+      }))
+      .pipe(eslint.format())
+      .pipe(eslint.failAfterError());
+
+    return scriptStream;
+  }
+);
+
+gulp.task(
+  'watch-server',
+  () => {
+    const scriptStream = gulp.watch(
+      ['src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'],
+      gulp.series(['lint-server'])
     );
 
     return scriptStream;
@@ -186,6 +245,7 @@ gulp.task(
 //-- https://fettblog.eu/gulp-4-parallel-and-series/
 
 //-- include series once we have a good set of linters.
-gulp.task('lint', gulp.series('webpack'));
+gulp.task('lint-site', gulp.series('webpack'));
+gulp.task('lint', gulp.series('lint-site','lint-server'));
 gulp.task('compile', gulp.series('webpack'));
 gulp.task('default', gulp.series('webpack'));
