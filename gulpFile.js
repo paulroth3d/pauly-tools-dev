@@ -1,4 +1,6 @@
 const gulp = require('gulp');
+/** logger */
+const log = require('fancy-log');
 /** Handle errors to avoid watch from breaking */
 const plumber = require('gulp-plumber');
 /** Support linting */
@@ -38,9 +40,9 @@ let LiveReloadServer;
 
 /*
 gulp.task('test-webpack', (done) => {
-  console.log('checking the webpack config');
+  log('checking the webpack config');
   const webpackConfig = WebpackConfigurator.configureWebpack();
-  console.log(JSON.stringify(webpackConfig, null, 2));
+  log(JSON.stringify(webpackConfig, null, 2));
   done();
 });
 */
@@ -50,7 +52,7 @@ gulp.task('test-webpack', (done) => {
 //-- https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async
 /*
 gulp.task('say-hello', (done) => {
-  console.log('hello');
+  log('hello');
   done();
 });
 */
@@ -78,37 +80,37 @@ gulpConfig.esLintConfigPath = 'eslint.json';
 
 gulp.task('view-webpack-config', (done) => {
   const webpackConfig = WebpackConfigurator.configureWebpack();
-  console.log(JSON.stringify(webpackConfig, null, 2));
+  log(JSON.stringify(webpackConfig, null, 2));
   done();
 });
 
 gulp.task('view-livereload-config', (done) => {
-  console.log(JSON.stringify(LiveReloadConfig, null, 2));
+  log(JSON.stringify(LiveReloadConfig, null, 2));
   done();
 });
 
 gulp.task('view-nodemon-config', (done) => {
-  console.log(JSON.stringify(NodemonConfig, null, 2));
+  log(JSON.stringify(NodemonConfig, null, 2));
   done();
 });
 
 gulp.task('view-styleguide-config', (done) => {
-  console.log(JSON.stringify(require(gulpConfig.styleGuideConfig), null, 2));
+  log(JSON.stringify(require(gulpConfig.styleGuideConfig), null, 2));
   done();
 });
 
 gulp.task('webpack', (done) => {
-  console.log('trying to run webpack');
+  log('trying to run webpack');
 
   const webpackConfig = WebpackConfigurator.configureWebpack();
-  console.log(JSON.stringify(webpackConfig));
+  log(JSON.stringify(webpackConfig));
 
   webpack(webpackConfig, (err, stats) => {
     if (err) {
-      console.error('Webpack', err);
+      log.error('Webpack', err);
       done();
     } else {
-      console.log(stats.toString());
+      log(stats.toString());
       done();
     }
   });
@@ -126,21 +128,21 @@ gulp.task('webpack', (done) => {
 
 
 gulp.task('watch', (done) => {
-  console.log('run webpack with watch');
+  log('run webpack with watch');
 
   const webpackConfig = WebpackConfigurator.configureWebpack({
     watch: true,
   });
-  console.log(JSON.stringify(webpackConfig));
+  log(JSON.stringify(webpackConfig));
 
   const webpackPromise = new Promise((resolve, reject) => {
     webpackServer = webpack(webpackConfig, (err, stats) => {
       if (err) {
-        console.error('Webpack', err);
+        log.error('Webpack', err);
         reject('Error loading webpack...');
       } else {
-        console.log('Webpack completed compiling...');
-        console.log(stats.toString());
+        log('Webpack completed compiling...');
+        log(stats.toString());
 
         resolve('Everything loaded');
       }
@@ -150,8 +152,8 @@ gulp.task('watch', (done) => {
   const liveReloadPromise = new Promise((resolve, reject) => {
     liveReloadServer = LiveReload.createServer({},
       () => {
-        console.log('liveReloadServer ready');
-        // console.log(arguments);
+        log('liveReloadServer ready');
+        // log(arguments);
         resolve('live reload server loaded');
       }
     );
@@ -161,7 +163,7 @@ gulp.task('watch', (done) => {
   const nodemonPromise = new Promise((resolve, reject) => {
     nodemonServer = Nodemon(NodemonConfig);
     nodemonServer.on('start', () => {
-      console.log('nodemon started');
+      log('nodemon started');
 
       //-- for some reason the restart is calling the start to get called again.
       //-- so we listen for start
@@ -171,28 +173,28 @@ gulp.task('watch', (done) => {
 
       resolve('nodemon has started');
     }).on('quit', () => {
-      console.log('nodemon has quit');
+      log('nodemon has quit');
     }).on('restart', (files) => {
-      console.log('nodemon restart');
+      log('nodemon restart');
     });
   })
 
   Promise.all([webpackPromise, liveReloadPromise, nodemonPromise])
     .then((message) => {
-      console.log('Everything has loaded:');
-      console.log(' * linting files in src/siteSrc');
-      console.log(' * linting express files in src/serverSrc');
-      console.log(' * running liveReload for changes in either');
-      console.log('To see the webpack config - run `npm run view-webpack-config`');
-      console.log('To see the liveReload config - run `npm run view-livereload-config');
-      console.log('To view the nodemon config - run `npm run view-nodemon-config');
-      console.log(`You can now browse to your site on http://localhost:${SERVER_PORT}/`);
+      log('Everything has loaded:');
+      log(' * linting files in src/siteSrc');
+      log(' * linting express files in src/serverSrc');
+      log(' * running liveReload for changes in either');
+      log('To see the webpack config - run `npm run view-webpack-config`');
+      log('To see the liveReload config - run `npm run view-livereload-config');
+      log('To view the nodemon config - run `npm run view-nodemon-config');
+      log(`You can now browse to your site on http://localhost:${SERVER_PORT}/`);
       done();
     })
     .catch((message) => {
-      console.log('Error occurred when loading liveserver and webpack.');
-      console.log(message);
-      console.log('\n\n\nYou will likely need to Exit (Ctrl-C) and restart.');
+      log('Error occurred when loading liveserver and webpack.');
+      log(message);
+      log('\n\n\nYou will likely need to Exit (Ctrl-C) and restart.');
       done();
     })
 });
@@ -204,7 +206,7 @@ gulp.task(
     const scriptStream = gulp.src([gulpConfig.internalJS])
       .pipe(plumber({
         errorHandler: (error) => {
-          console.error(error.message);
+          log.error(error.message);
           scriptStream.emit('end');
         },
       }))
@@ -241,7 +243,7 @@ gulp.task(
       ])
       .pipe(plumber({
         errorHandler: (error) => {
-          console.error(error.message);
+          log.error(error.message);
           scriptStream.emit('end');
         },
       }))

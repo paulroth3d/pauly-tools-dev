@@ -1,3 +1,4 @@
+const log = require('fancy-log');
 const express = require('express');
 const path = require('path');
 const config = require('config');
@@ -23,4 +24,4 @@ const expressServer = express()
 
 //-- anything more than providing a renderer to a page should be handled in its own separate module.
 
-expressServer.listen(PORT, () => console.log(`Listening on ${PORT}`));
+expressServer.listen(PORT, () => log(`Listening on ${PORT}`));
