@@ -101,6 +101,13 @@ function configureWebpack(configParams) {
             presets: ['env', 'react'],
           },
         },
+        {
+          test: /\.(jpe?g|png|gif|svg)$/i,
+          use: [
+            'url-loader?limit=10',
+            'img-loader'
+          ]
+        }
       ],
     },
     plugins: [
@@ -156,7 +163,7 @@ function configureWebpack(configParams) {
     });
   }
 
-  //console.log('Webpack config generated. To see the values run `npm run view-webpack-config`');
+  // console.log('Webpack config generated. To see the values run `npm run view-webpack-config`');
 
   return webpackConfig;
 }

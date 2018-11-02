@@ -141,17 +141,17 @@ gulp.task('watch', (done) => {
     nodemonServer = Nodemon(NodemonConfig);
     nodemonServer.on('start', () => {
       console.log('nodemon started');
-      resolve('nodemon server has started');
+
+      //-- for some reason the restart is calling the start to get called again.
+      //-- so we listen for start
+      setTimeout(()=>{
+        liveReloadServer.refresh("");
+      }, 1000);
+
     }).on('quit', () => {
       console.log('nodemon has quit');
     }).on('restart', (files) => {
-      gulp.task('lint-server')((err) => {
-        console.log('lint-server finished');
-        if(err){
-          console.error('error',err);
-        }
-        liveReloadServer.refresh("");
-      });
+      console.log('nodemon restart');
     });
   })
 
