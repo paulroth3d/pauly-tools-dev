@@ -55,6 +55,27 @@ gulp.task('say-hello', (done) => {
 });
 */
 
+const gulpConfig = {
+  //-- server public files used for watching when to reload
+  serverSrcPublic: 'src/serverSrc/public/**/*',
+
+  //-- js files used in setting things up - but not running the server
+  internalJS: './*.js',
+
+  //-- js files used in the server
+  serverJS: 'src/serverSrc/**/*.js',
+
+  //-- local modules
+  localModulesJS: 'src/local_modules/**/*.js',
+
+  //-- location of the styleguide config
+  styleGuideConfig: './styleguide.config'
+};
+gulpConfig.serverSrcPublicPath = path.resolve(__dirname, gulpConfig.serverSrcPublic);
+gulpConfig.esLintConfigPath = 'eslint.json';
+
+//-- start of scripts
+
 gulp.task('view-webpack-config', (done) => {
   const webpackConfig = WebpackConfigurator.configureWebpack();
   console.log(JSON.stringify(webpackConfig, null, 2));
@@ -72,7 +93,7 @@ gulp.task('view-nodemon-config', (done) => {
 });
 
 gulp.task('view-styleguide-config', (done) => {
-  console.log(JSON.stringify(require('./styleguide.config'), null, 2));
+  console.log(JSON.stringify(require(gulpConfig.styleGuideConfig), null, 2));
   done();
 });
 
@@ -134,7 +155,7 @@ gulp.task('watch', (done) => {
         resolve('live reload server loaded');
       }
     );
-    liveReloadServer.watch( path.resolve(__dirname + "/src/serverSrc/public/**/*"));
+    liveReloadServer.watch(gulpConfig.serverSrcPublicPath);
   });
 
   const nodemonPromise = new Promise((resolve, reject) => {
@@ -148,6 +169,7 @@ gulp.task('watch', (done) => {
         liveReloadServer.refresh("");
       }, 1000);
 
+      resolve('nodemon has started');
     }).on('quit', () => {
       console.log('nodemon has quit');
     }).on('restart', (files) => {
@@ -179,7 +201,7 @@ gulp.task('watch', (done) => {
 gulp.task(
   'lint-internal',
   () => {
-    const scriptStream = gulp.src(['./*.js'])
+    const scriptStream = gulp.src([gulpConfig.internalJS])
       .pipe(plumber({
         errorHandler: (error) => {
           console.error(error.message);
@@ -187,7 +209,7 @@ gulp.task(
         },
       }))
       .pipe(eslint({
-        configFile: 'eslint.json',
+        configFile: gulpConfig.esLintConfigPath,
       }))
       .pipe(eslint.format())
       .pipe(eslint.failAfterError());
@@ -200,7 +222,7 @@ gulp.task(
   'watch-internal',
   () => {
     const scriptStream = gulp.watch(
-      ['./*.js'],
+      [gulpConfig.internalJS],
       gulp.series(['lint-internal'])
     );
 
@@ -212,7 +234,11 @@ gulp.task(
 gulp.task(
   'lint-server',
   () => {
-    const scriptStream = gulp.src(['src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'])
+    const scriptStream = gulp.src([
+        gulpConfig.serverJS,
+        '!' + gulpConfig.serverSrcPublic,
+        gulpConfig.localModulesJS
+      ])
       .pipe(plumber({
         errorHandler: (error) => {
           console.error(error.message);
@@ -233,7 +259,11 @@ gulp.task(
   'watch-server',
   () => {
     const scriptStream = gulp.watch(
-      ['src/serverSrc/**/*.js', '!src/serverSrc/public/**/*', 'src/local_modules/**/*.js'],
+      [
+        gulpConfig.serverJS,
+        '!' + gulpConfig.serverSrcPublic,
+        gulpConfig.localModulesJS
+      ],
       gulp.series(['lint-server'])
     );
 
