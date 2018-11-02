@@ -62,6 +62,8 @@
     "gulp-plumber": "1.2.0",
     "gulp-sass": "4.0.1",
     "gulp-uglify": "3.0.1",
+    "imagemin": "6.0.0",
+    "img-loader": "3.0.1",
     "livereload": "0.7.0",
     "nodemon": "1.18.4",
     "react-styleguidist": "^7.3.8",
@@ -70,9 +72,9 @@
     "style-loader": "0.23.0",
     "tape": "^4.7.0",
     "underscore": "1.9.1",
+    "url-loader": "1.1.2",
     "webpack": "4.19.1",
     "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.1.8",
     "webpack-stream": "5.1.1"
   },
   "repository": {
