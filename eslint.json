@@ -20,13 +20,16 @@
 		"import/no-extraneous-dependencies": ["off"],
 		"prefer-const": "warn",
 		"comma-dangle": "off",
-		"class-methods-use-this": "off"
+		"class-methods-use-this": "off",
+		"require-jsdoc": 2,
+		"valid-jsdoc": 2
 	},
 	"extends": [
 		"standard-react"
 	],
 	"plugins": [
-		"react"
+		"react",
+		"require-jsdoc"
 	],
 	"env": {
 		"browser": true

@@ -11,6 +11,7 @@ const config = require('config');
 
 /**
  * determines a list of all the app files
+ * @return {object} - list of fileNames for all apps under /src/siteSrc/script/app/*.js
  */
 function listAppFiles(){
   const results = [];
@@ -39,7 +40,8 @@ function listAppFiles(){
 
 /**
  * Generate the base webpack configuration
- * @return Object
+ * @param {object} configParams - set of parameters to configure webpack with {eslint:boolean, node_env:string, watch:boolean}
+ * @return {object} - the final webpack configuration to be used.
  */
 function configureWebpack(configParams) {
   const configSettings = underscore.defaults(configParams, {
