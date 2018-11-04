@@ -11,6 +11,7 @@
   "verbose": true,
   "watch": [
     "src/serverSrc/**/*.js",
-    "src/serverSrc/**/*.ejs"
+    "src/serverSrc/**/*.ejs",
+    "src/local_modules/**/*.js"
   ]
 }
