@@ -41,7 +41,8 @@ const LiveReloadConfig = require('./liveReload.config');
 const NodemonConfig = require('./nodemon.json');
 
 let webpackServer;
-let LiveReloadServer;
+let liveReloadServer;
+let nodemonServer;
 
 //-- deprecated plugins no longer needed
 // const sass = require('gulp-sass');
@@ -74,10 +75,10 @@ const gulpConfig = {
   internalJS: './*.js',
 
   //-- js files used in the server
-  serverJS: 'src/serverSrc/**/*.js',
+  serverJS: './src/serverSrc/**/*.js',
 
   //-- local modules
-  localModulesJS: 'src/local_modules/**/*.js',
+  localModulesJS: './src/local_modules/**/*.js',
 
   //-- location of the styleguide config
   styleGuideConfig: './styleguide.config'

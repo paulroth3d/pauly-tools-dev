@@ -24,8 +24,7 @@ function listAppFiles(){
   const appFiles = fs.readdirSync(appPath);
   const jsMatcher = /(.*)\.js$/;
   let match;
-  let filename;
-  for ( fileName of appFiles) {
+  for ( const fileName of appFiles) {
     // console.log('appFile:' + fileName);
     if (fileName) {
       match = fileName.match(jsMatcher);

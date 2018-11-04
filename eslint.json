@@ -22,7 +22,8 @@
 		"comma-dangle": "off",
 		"class-methods-use-this": "off",
 		"require-jsdoc": 2,
-		"valid-jsdoc": 2
+		"valid-jsdoc": 2,
+		"no-undef": "error"
 	},
 	"extends": [
 		"standard-react"
@@ -32,7 +33,13 @@
 		"require-jsdoc"
 	],
 	"env": {
-		"browser": true
+		"browser": true,
+		"commonjs": true
+	},
+	"globals": {
+		"__dirname": true,
+		"process": true,
+		"Promise": true
 	},
 	"parserOptions": {
 		"ecmaVersion": 6,
