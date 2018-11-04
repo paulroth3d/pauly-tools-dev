@@ -13,8 +13,17 @@ const path = require('path');
 const fs = require('fs-extra');
 /** Provides JS to refresh the browser on changes (used only for dev) */
 const LiveReload = require('livereload');
-/** nodemon server - used for watch */
+/** nodemon server - used for watch and telling livereload to fire */
 const Nodemon = require('nodemon');
+
+//-- for those cases that absolutely need it
+/** allow command line arguments - like stubbing out pages */
+const argv = require('yargs').argv;
+
+/** dead simple template engine
+ *  @TODO: review whether yeoman would be actually wanted
+ */
+const TemplateEngine = require('./src/local_modules/TemplateEngine');
 
 const config = require('config');
 
@@ -203,7 +212,7 @@ gulp.task('watch', (done) => {
 gulp.task(
   'lint-internal',
   () => {
-    const scriptStream = gulp.src([gulpConfig.internalJS])
+    const scriptStream = gulp.src([gulpConfig.internalJS, gulpConfig.localModulesJS])
       .pipe(plumber({
         errorHandler: (error) => {
           log.error(error.message);
@@ -224,7 +233,7 @@ gulp.task(
   'watch-internal',
   () => {
     const scriptStream = gulp.watch(
-      [gulpConfig.internalJS],
+      [gulpConfig.internalJS, gulpConfig.localModulesJS],
       gulp.series(['lint-internal'])
     );
 
@@ -272,6 +281,32 @@ gulp.task(
     return scriptStream;
   }
 );
+
+gulp.task('create-page', (done) => {
+  //-- check if the page name was sent
+  if (!argv.pageName) {
+    log.error('cannot execute task create-page');
+    log.error('--pageName [[camel case name of page]] : is required');
+    done();
+    return;
+  }
+
+  const pageName = argv.pageName;
+
+  const pagePaths = TemplateEngine.createPage(pageName);
+
+  //-- do not automatically add the route yet
+  const routerPath = path.resolve(__dirname, './src/serverSrc/index.js');
+
+  log(`
+completed writing ejs file:${pagePaths.ejs}
+completed writing app file:${pagePaths.app}
+
+Note you will need to add a route to make this page acessible.
+${routerPath}`)
+
+  done();
+});
 
 //-- chains
 //-- https://fettblog.eu/gulp-4-parallel-and-series/
