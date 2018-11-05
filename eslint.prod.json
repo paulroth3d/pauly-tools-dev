@@ -37,6 +37,10 @@
 		"process": true,
 		"Promise": true
 	},
+	
+	//-- used instead of the standard parser for handling class properties
+	"parser": "babel-eslint",
+	
 	"parserOptions": {
 		"ecmaVersion": 6,
 		"sourceType": "module",

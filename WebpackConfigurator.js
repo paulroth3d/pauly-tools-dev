@@ -99,11 +99,12 @@ function configureWebpack(configParams) {
           ],
         },
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           loader: 'babel-loader',
           exclude: [/node_modules/],
           options: {
-            presets: ['env', 'react'],
+            presets: ['@babel/env', '@babel/react'],
+            plugins: ['@babel/plugin-proposal-class-properties']
           },
         },
         {
