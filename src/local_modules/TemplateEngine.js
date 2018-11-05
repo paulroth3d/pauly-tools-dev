@@ -46,18 +46,7 @@ function createEJS(pageName) {
   <html>
   <head>
     <meta charset="utf-8">
-    <%if (settings.env === 'development') {%>
-    <meta name="environment" value="livereload" />
-    <script>
-      document.write(
-        '<script src="http://' +
-        (location.host || 'localhost').split(':')[0] +
-        ':35729/livereload.js?snipver=1"></' + 'script>'
-      );
-    </script>
-    <% } else { %>
-    <meta name="environment" value="production" />
-    <% } %>
+    <% include ../partials/liveReload.ejs %>
     <title>${pageName}</title>
   </head>
   <body>
