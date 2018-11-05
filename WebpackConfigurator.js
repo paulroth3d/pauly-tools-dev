@@ -72,6 +72,13 @@ function configureWebpack(configParams) {
      */
     watch: configSettings.watch,
 
+    /**
+     * Look for index files at the base directory
+     */
+    resolve: {
+      mainFiles: ['index']
+    },
+
     /** build rules */
     module: {
       rules: [
