@@ -15,6 +15,8 @@ const fs = require('fs-extra');
 const LiveReload = require('livereload');
 /** nodemon server - used for watch and telling livereload to fire */
 const Nodemon = require('nodemon');
+/** jest testing */
+const jest = require('gulp-jest').default;
 
 //-- for those cases that absolutely need it
 /** allow command line arguments - like stubbing out pages */
@@ -39,6 +41,8 @@ const WebpackConfigurator = require('./WebpackConfigurator');
 const LiveReloadConfig = require('./liveReload.config');
 /** nodemon config */
 const NodemonConfig = require('./nodemon.json');
+/** jest config */
+const JestConfig = require('./jest.config.js');
 
 let webpackServer;
 let liveReloadServer;
@@ -81,10 +85,14 @@ const gulpConfig = {
   localModulesJS: './src/local_modules/**/*.js',
 
   //-- location of the styleguide config
-  styleGuideConfig: './styleguide.config'
+  styleGuideConfig: './styleguide.config',
+
+  //-- test patterns
+  testPattern: './src/**/*test.js'
 };
 gulpConfig.serverSrcPublicPath = path.resolve(__dirname, gulpConfig.serverSrcPublic);
 gulpConfig.esLintConfigPath = 'eslint.json';
+gulpConfig.testPatterns = [gulpConfig.testPattern];
 
 //-- start of scripts
 
@@ -282,6 +290,37 @@ gulp.task(
     return scriptStream;
   }
 );
+
+gulp.task('test', (done) => {
+  const scriptStream = gulp.src(['src']) //-- @TODO: the files to be run are actually in the jest config
+    //.pipe(jest(JestConfig));
+    .pipe(jest({
+      "verbose": true,
+      "modulePaths": [
+        "<rootDir>/src/"
+      ],
+      "modulePathIgnorePatterns": [
+        "<rootDir>/src/serverSrc/public",
+        "<rootDir>/src/siteSrc/lib",
+      ]
+    }));
+  
+  return scriptStream;
+});
+
+gulp.task('watch-test', () => {
+  const scriptStream = gulp.watch(
+    [
+      ...gulpConfig.testPatterns,
+      gulpConfig.serverJS,
+      '!' + gulpConfig.serverSrcPublic,
+      gulpConfig.localModulesJS
+    ],
+    gulp.series(['test'])
+  );
+
+  return scriptStream;
+});
 
 gulp.task('create-page', (done) => {
   //-- check if the page name was sent
