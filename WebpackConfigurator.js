@@ -80,6 +80,10 @@ function configureWebpack(configParams) {
           loader: ['raw'],
         },
         {
+          test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+          loader: 'url-loader?limit=100000'
+        },
+        {
           test: /\.css$/,
           use: [
             { loader: 'style-loader' },
@@ -154,7 +158,7 @@ function configureWebpack(configParams) {
     webpackConfig.module.rules.push({
       test: /\.js$/,
       loader: 'eslint-loader',
-      exclude: [/node_modules/],
+      exclude: [/node_modules/, /lib/],
       enforce: 'pre',
       options: {
         formatter: eslintFriendlyFormatter,

@@ -1,4 +1,5 @@
-.jumbotron {
+/*
+.btn-primary {
   background: #532F8C;
   color: white;
   padding-bottom: 80px; 
@@ -31,6 +32,7 @@
 .jumbotron .lang-logo img {
   max-width: 100%;
 }
+*/
 
 .container {
   position: relative;
@@ -52,6 +54,11 @@
   z-index: 5;
   height: .4em;
 }
-.timer-block {
-  margin: 10px;
+
+#title-block {
+  padding-left: 1em;
+}
+
+.notification-block {
+  padding-left: 1em;
 }
