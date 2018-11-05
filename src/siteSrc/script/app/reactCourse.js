@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import '../../style/react-course.scss';
 
-import Person from '../components/Person';
+import {Person} from '../components/reactCourse';
 
 class App extends Component {
 

@@ -3,7 +3,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import ShoppingList from '../components/ShoppingList';
+// import reactCourse from '../components/reactCourse';
+// const ShoppingList = reactCourse.ShoppingList;
+
+import {ShoppingList} from '../components/reactCourse';
 
 const title = 'This is built from react';
 
