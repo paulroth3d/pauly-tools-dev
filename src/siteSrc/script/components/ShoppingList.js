@@ -15,6 +15,4 @@ class ShoppingList extends React.Component {
   }
 }
 
-
-
-module.exports = ShoppingList;
+export default ShoppingList;
