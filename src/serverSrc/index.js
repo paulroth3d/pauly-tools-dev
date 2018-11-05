@@ -27,6 +27,7 @@ const expressServer = express()
   .get('/heroku', (req, res) => res.render('pages/heroku'))
   .get('/javascript', (req, res) => res.render('pages/exampleJavascript'))
   .get('/react', (req, res) => res.render('pages/exampleReact'))
+  .get('/reactCourse', (req,res) => res.render('pages/reactCourse'))
   .get('/title', TitlePageRoute.handleExpressRequest);
 
 //-- anything more than providing a renderer to a page should be handled in its own separate module.
