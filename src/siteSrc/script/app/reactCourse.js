@@ -18,10 +18,16 @@ class App extends Component {
         type: 'bad',
         message: null
       }],
-      currentPerson: null
+      currentPerson: null,
+      showPerson: true
     };
     this.state.currentPerson = this.state.people[0];
     // this.switchNameHandler = this.switchNameHandler.bind(this);
+  }
+
+  toggleShowPeopleHandler = () => {
+    console.log('toggleShowPeopleHandler');
+    this.setState({showPerson: !this.state.showPerson});
   }
 
   switchNameHandler = () => {
@@ -69,9 +75,13 @@ class App extends Component {
     return (
       <div className='App'>
         <h1>Hi. I'm a react app</h1>
-        <p>This works</p>
-        <Person name={this.state.currentPerson.name} type={this.state.currentPerson.type} clickHandler={this.handlePersonSayHello}>{this.state.currentPerson.message}</Person>
-        <button onClick={this.switchNameHandler}>Switch Name</button>
+        <p>People are shown: {this.state.showPerson?'true':'false'}</p>
+        {
+          this.state.showPerson ?
+            <Person name={this.state.currentPerson.name} type={this.state.currentPerson.type} clickHandler={this.handlePersonSayHello}>{this.state.currentPerson.message}</Person>
+          : null
+        }
+        <button onClick={this.toggleShowPeopleHandler}>Toggle Showing People</button>
       </div>
     )
   }
