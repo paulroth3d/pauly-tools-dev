@@ -43,8 +43,8 @@ class App extends Component {
     this.setState(newState);
   }
 
-  handlePersonSayHello = () => {
-    console.log('person is saying hello');
+  handlePersonSayHello = (props) => {
+    console.log(`person ${props.name} is saying hello`);
   }
 
   /*
