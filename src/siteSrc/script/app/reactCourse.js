@@ -43,6 +43,10 @@ class App extends Component {
     this.setState(newState);
   }
 
+  handlePersonSayHello = () => {
+    console.log('person is saying hello');
+  }
+
   /*
   instanceProperty = "bork";
   boundFunction = () => {
@@ -66,7 +70,7 @@ class App extends Component {
       <div className='App'>
         <h1>Hi. I'm a react app</h1>
         <p>This works</p>
-        <Person name={this.state.currentPerson.name} type={this.state.currentPerson.type}>{this.state.currentPerson.message}</Person>
+        <Person name={this.state.currentPerson.name} type={this.state.currentPerson.type} clickHandler={this.handlePersonSayHello}>{this.state.currentPerson.message}</Person>
         <button onClick={this.switchNameHandler}>Switch Name</button>
       </div>
     )

@@ -7,13 +7,14 @@ const Person = (props) => {
     personMessage = <b>{props.children}</b>;
   }
   return (
-    <p>Hello, my name is {props.name}. I am a {props.type} person. {personMessage}</p>
+    <p>Hello, my name is {props.name}. I am a {props.type} person. {personMessage} <button onClick={props.clickHandler}>Say Hello</button></p>
   );
 }
 
 Person.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
+  clickHandler: PropTypes.func,
   children: PropTypes.any
 };
 
