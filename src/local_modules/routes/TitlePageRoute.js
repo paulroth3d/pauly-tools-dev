@@ -38,6 +38,10 @@ function getExpressTitleParam(request) {
     console.error(err);
   }
 
+  if (!title) {
+    title='ExampleTitle';
+  }
+
   return title;
 }
 
