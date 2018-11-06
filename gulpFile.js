@@ -112,46 +112,64 @@ gulpConfig.testPatterns = [gulpConfig.testPattern];
 
 
 
-//#    #    #    #    #    #    #    #    #    #    #    #
-//-- start of scripts
-//#    #    #    #    #    #    #    #    #    #    #    #
+// #    #    #    #    #    #    #    #    #    #    #    #
+// -- start of scripts
+// #    #    #    #    #    #    #    #    #    #    #    #
 
 
 
 
-
+/**
+ * View the webpack configuration
+ */
 gulp.task('view-webpack-config', (done) => {
   const webpackConfig = WebpackConfigurator.configureWebpack();
   log(JSON.stringify(webpackConfig, null, 2));
   done();
 });
 
+/**
+ * View the livereload configuration
+ */
 gulp.task('view-livereload-config', (done) => {
   log(JSON.stringify(LiveReloadConfig, null, 2));
   done();
 });
 
+/**
+ * View the nodemon configuration
+ */
 gulp.task('view-nodemon-config', (done) => {
   log(JSON.stringify(NodemonConfig, null, 2));
   done();
 });
 
+/**
+ * View the current jest configuration
+ */
 gulp.task('view-jest-config', (done) => {
   const jestConfig = JestConfigurator.configureJest();
   log(JSON.stringify(jestConfig, null, 2));
   done();
 });
 
+/**
+ * View the styleguide (styleguidist) configuration
+ */
 gulp.task('view-styleguide-config', (done) => {
   log(JSON.stringify(require(gulpConfig.styleGuideConfig), null, 2));
   done();
 });
 
+/**
+ * Compile the application using webpack.
+ * <p>Transpile, lint, etc</p>
+ */
 gulp.task('webpack', (done) => {
-  log('trying to run webpack');
+  log('Executing webpack');
 
   const webpackConfig = WebpackConfigurator.configureWebpack();
-  log(JSON.stringify(webpackConfig));
+  // log(JSON.stringify(webpackConfig));
 
   webpack(webpackConfig, (err, stats) => {
     if (err) {
@@ -162,19 +180,13 @@ gulp.task('webpack', (done) => {
       done();
     }
   });
-  
-  /*
-  //-- unfortunately, webpack-stream requires
-  //-- we send in specific configurations from gulp
-  //-- overwriting configs in webpack config
-  
-  return gulp.src('./src/serverSrc/public/entry.js')
-    .pipe(webpackStream( require('./webpack.config.js')))
-    .pipe(gulp.dest('./src/serverSrc/public/'));
-  */
 });
 
-
+/**
+ * Lint, Compile and watch the application.
+ * <p>If there are changes (either server side or site side)
+ *  then reload</p>
+ */
 gulp.task('watch', (done) => {
   log('run webpack with watch');
 
@@ -247,11 +259,16 @@ gulp.task('watch', (done) => {
     })
 });
 
-//-- run a linter against javascript
+/**
+ * Lint all the 
+ */
 gulp.task(
   'lint-internal',
   () => {
-    const scriptStream = gulp.src([gulpConfig.internalJS, gulpConfig.localModulesJS])
+    const lintPaths = [gulpConfig.internalJS, gulpConfig.localModulesJS];
+    log('Now linting:', lintPaths);
+
+    const scriptStream = gulp.src(lintPaths)
       .pipe(plumber({
         errorHandler: (error) => {
           log.error(error.message);
@@ -271,8 +288,11 @@ gulp.task(
 gulp.task(
   'watch-internal',
   () => {
+    const watchPaths = [gulpConfig.internalJS, gulpConfig.localModulesJS];
+    log('Now watching:', watchPaths);
+
     const scriptStream = gulp.watch(
-      [gulpConfig.internalJS, gulpConfig.localModulesJS],
+      watchPaths,
       gulp.series(['lint-internal'])
     );
 
@@ -284,11 +304,14 @@ gulp.task(
 gulp.task(
   'lint-server',
   () => {
-    const scriptStream = gulp.src([
-        gulpConfig.serverJS,
-        '!' + gulpConfig.serverSrcPublicAllFiles,
-        gulpConfig.localModulesJS
-      ])
+    const lintPaths = [
+      gulpConfig.serverJS,
+      '!' + gulpConfig.serverSrcPublicAllFiles,
+      gulpConfig.localModulesJS
+    ];
+    log('Now linting:', lintPaths);
+
+    const scriptStream = gulp.src(lintPaths)
       .pipe(plumber({
         errorHandler: (error) => {
           log.error(error.message);
@@ -308,12 +331,15 @@ gulp.task(
 gulp.task(
   'watch-server',
   () => {
+    const watchPaths = [
+      gulpConfig.serverJS,
+      '!' + gulpConfig.serverSrcPublicAllFiles,
+      gulpConfig.localModulesJS
+    ];
+    log('Now watching:', watchPaths);
+
     const scriptStream = gulp.watch(
-      [
-        gulpConfig.serverJS,
-        '!' + gulpConfig.serverSrcPublicAllFiles,
-        gulpConfig.localModulesJS
-      ],
+      watchPaths,
       gulp.series(['lint-server'])
     );
 
@@ -325,19 +351,29 @@ gulp.task('test', (done) => {
   const jestConfig = JestConfigurator.configureJest();
 
   const scriptStream = gulp.src(['src']) //-- @TODO: the files to be run are actually in the jest config
+    .pipe(plumber({
+      errorHandler: (error) => {
+        log.error('Error occurred during test');
+        log.error(error.message);
+        scriptStream.emit('end');
+      },
+    }))
     .pipe(jest(jestConfig));
   
   return scriptStream;
 });
 
 gulp.task('watch-test', () => {
+  const watchPaths = [
+    ...gulpConfig.testPatterns,
+    gulpConfig.serverJS,
+    '!' + gulpConfig.serverSrcPublic,
+    gulpConfig.localModulesJS
+  ];
+  log('Now watching:', watchPaths);
+
   const scriptStream = gulp.watch(
-    [
-      ...gulpConfig.testPatterns,
-      gulpConfig.serverJS,
-      '!' + gulpConfig.serverSrcPublic,
-      gulpConfig.localModulesJS
-    ],
+    watchPaths,
     gulp.series(['test'])
   );
 
