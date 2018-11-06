@@ -35,13 +35,11 @@ function createPage(pageName) {
 }
 
 /**
- * Creates a new EJS page
- * @param {string} pageName - the name of the page
- * @return {string} - path of the file written
+ * Generates the EJS file using a template
+ * @param {string} pageName - the short name of the page to create
+ * @returns {string} - body of the new EJS file
  */
-function createEJS(pageName) {
-  console.log('writing out a new ejs page:' + pageName);
-
+function generateEJS(pageName) {
   const ejsBody = `<!DOCTYPE html>
   <html>
   <head>
@@ -53,16 +51,56 @@ function createEJS(pageName) {
       <div id="app"></div>
       <script src="/${pageName}.js"></script>
   </body>
-  </html>`;
+</html>`;
 
+  return ejsBody;
+}
+
+/**
+ * Determines the path of where the EJS file should go with a given pageName
+ * @param {string} pageName - the path of where the ejs page should go
+ * @returns {string} - path for where the ejs file should go
+ */
+function determineEJSPath(pageName) {
   const targetPath = path.resolve(__dirname, `../serverSrc/pages/${pageName}.ejs`);
-  console.log('path to write', targetPath);
+  return targetPath;
+}
 
-  console.log('ejsBody', ejsBody);
+/**
+ * Creates a new EJS page
+ * @param {string} pageName - the name of the page
+ * @return {string} - path of the file written
+ */
+function createEJS(pageName) {
+  console.log('writing out a new ejs page:' + pageName);
+
+  var ejsBody = generateEJS(pageName);
+  const targetPath = determineEJSPath(pageName);
 
   fs.writeFileSync(targetPath, ejsBody);
 
   return targetPath;
+}
+
+/**
+ * Generates the default body of a new JS App with a given app name.
+ * @param {string} appName - short name of the app
+ * @returns {string} - body of a new JS App file
+ */
+function generateJSApp(appName) {
+  const appBody = `//-- place your javascript down below.
+`;
+  return appBody;
+}
+
+/**
+ * Determines the path for where a new JS App should be placed.
+ * @param {string} appName - short name of the app
+ * @returns {string} - path where the JSApp should go
+ */
+function determineJSAppPath(appName) {
+  const appPath = path.resolve(__dirname, `../siteSrc/script/app/${appName}.js`);
+  return appPath;
 }
 
 /**
@@ -71,16 +109,22 @@ function createEJS(pageName) {
  * @return {string} - path of the file written
  */
 function createJSApp(appName) {
-  const appPath = path.resolve(__dirname, `../siteSrc/script/app/${appName}.js`);
-  console.log('wrote file to', appPath);
-  const appBody = `//-- place your javascript down below.
-`;
+
+  const appBody = generateJSApp(appName);
+  const appPath = determineJSAppPath(appName);
   fs.writeFileSync(appPath, appBody);
+  console.log('wrote file to', appPath);
+
   return appPath;
 }
 
 module.exports = {
   createEJS: createEJS,
   createJSApp: createJSApp,
-  createPage: createPage
+  createPage: createPage,
+
+  _generateEJS: generateEJS,
+  _determineEJSPath: determineEJSPath,
+  _generateJSApp : generateJSApp,
+  _determineJSAppPath : determineJSAppPath
 };
