@@ -81,7 +81,7 @@ gulpConfig.serverPublicDir = `${gulpConfig.serverSrcDir}/public`;
 //-- source for all client side code
 gulpConfig.siteSrcDir = 'src/siteSrc';
 //-- place for all non-code resources used in the client side
-gulpConfig.sitePublicDir = `${gulpConfig.siteSrcDir}/public`;
+gulpConfig.siteResourcesDir = `${gulpConfig.siteSrcDir}/resources`;
 
 
 //-- server public files used for watching when to reload

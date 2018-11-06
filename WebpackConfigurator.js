@@ -127,9 +127,8 @@ function configureWebpack(configParams) {
       new CopyWebpackPlugin(
         [
           {
-            test: /\.png$/,
-            from: './src/siteSrc/public/**/*',
-            to: './src/serverSrc/public',
+            test: /\.(jpe?g|png|gif|svg)$/,
+            from: 'resources/**/*',
             force: true
           }
         ],
