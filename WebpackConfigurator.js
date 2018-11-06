@@ -8,6 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const underscore = require('underscore');
 
 const config = require('config');
+const filePaths = require('./config/FilePaths');
 
 /**
  * determines a list of all the app files
@@ -44,7 +45,7 @@ function listAppFiles(appPath){
 function configureWebpack(configParams) {
   const configSettings = underscore.defaults(configParams, {
     eslint: true,
-    node_env: process.env.NODE_ENV || 'development',
+    node_env: config.NODE_ENV,
     watch: false,
     debug: false
   });
@@ -58,10 +59,11 @@ function configureWebpack(configParams) {
     //-- entries are defined dynamically down below based on the script/app folder
     entry: {},
     output: {
-      path: path.resolve(__dirname, './src/serverSrc/public/'),
+      path: filePaths.serverPublicPath,
       filename: '[name].js',
     },
-    context: path.resolve(__dirname, './src/siteSrc/'),
+    
+    //context: filePaths.siteSrcPath,
 
     /** include sourcemaps for debugging */
     devtool: 'source-map',
@@ -141,13 +143,13 @@ function configureWebpack(configParams) {
   };
 
   //-- dynamically include any routes based on script/apps
-  const appFilesPath = './src/siteSrc/script/app';
+  const appFilesPath = filePaths.siteAppPath;
   const appFiles = listAppFiles(appFilesPath);
-  const appPath = './script/app/';
   let appFile;
   for (appFile of appFiles) {
-    webpackConfig.entry[appFile] = appPath + appFile + '.js';
+    webpackConfig.entry[appFile] = path.resolve( appFilesPath, appFile + '.js');
   }
+
   /*
   @POSTCONDITION: the routes are based off the name of the files under script/app
   ex: entry: {
@@ -161,10 +163,7 @@ function configureWebpack(configParams) {
 
   //-- include eslint configs if eslint param was sent
   if (configSettings.eslint) {
-    let esLintPath = './eslint.json';
-    if (configSettings.node_env === 'production') {
-      esLintPath = './eslint.prod.json';
-    }
+    let esLintPath = filePaths.eslintConfig;
 
     webpackConfig.module.rules.push({
       test: /\.js$/,

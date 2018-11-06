@@ -1,5 +1,8 @@
 module.exports = {
 
+    //-- the current environment we are in
+    "NODE_ENV": process.env.NODE_ENV || 'development',
+
     //-- base defults
     "DEFAULT": {
         //-- default port
@@ -13,5 +16,9 @@ module.exports = {
 	"statusCodes": {
 		"unauthorized": 401,
 		"unauthorizedText": "Unauthorized"
-	}
+    },
+    
+    //-- node environments
+    "DEVELOPMENT": "development",
+    "PRODUCTION": "production"
 }

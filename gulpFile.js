@@ -27,7 +27,10 @@ const argv = require('yargs').argv;
  */
 const TemplateEngine = require('./src/local_modules/TemplateEngine');
 
+//-- project configuration
 const config = require('config');
+//-- path configuration
+const filePaths = require('./config/FilePaths');
 
 //-- the server port is something special - get it so we can tell the user where to go
 const SERVER_PORT = process.env.PORT || config.DEFAULT.PORT;
@@ -43,11 +46,12 @@ const JestConfigurator = require('./JestConfigurator');
 /** config for live reload */
 const LiveReloadConfig = require('./liveReload.config');
 /** nodemon config */
-const NodemonConfig = require('./nodemon.json');
+const NodemonConfig = require('./nodemonConfig');
 
 let webpackServer;
 let liveReloadServer;
 let nodemonServer;
+let nodemonRefreshTimeout;
 
 //-- deprecated plugins no longer needed
 // const sass = require('gulp-sass');
@@ -72,52 +76,19 @@ gulp.task('say-hello', (done) => {
 });
 */
 
-const gulpConfig = {}
-
-//-- source for all the server side code
-gulpConfig.serverSrcDir = 'src/serverSrc';
-//-- place for all files to be served (public directory)
-gulpConfig.serverPublicDir = `${gulpConfig.serverSrcDir}/public`;
-//-- source for all client side code
-gulpConfig.siteSrcDir = 'src/siteSrc';
-//-- place for all non-code resources used in the client side
-gulpConfig.siteResourcesDir = `${gulpConfig.siteSrcDir}/resources`;
-
-
-//-- server public files used for watching when to reload
-gulpConfig.serverSrcPublicAllFiles = `${gulpConfig.serverPublicDir}/**/*`;
-//-- full path for all server public files
-gulpConfig.serverSrcPublicPath = path.resolve(__dirname, gulpConfig.serverSrcPublicAllFiles);
-
-//-- js files used in setting things up - but not running the server
-gulpConfig.internalJS = './*.js';
-//-- js files used in the server
-gulpConfig.serverJS = './src/serverSrc/**/*.js';
-
-//-- local modules
-gulpConfig.localModulesJS = './src/local_modules/**/*.js';
-
-//-- location of the styleguide config
-gulpConfig.styleGuideConfig = './styleguide.config';
-
-//-- path to the eslint configuration file
-gulpConfig.esLintConfigPath = 'eslint.json';
-
-//-- test patterns
-gulpConfig.testPattern = './src/**/*test.js';
-//-- collection of all the current test patterns
-gulpConfig.testPatterns = [gulpConfig.testPattern];
-
-
-
-
 
 // #    #    #    #    #    #    #    #    #    #    #    #
 // -- start of scripts
 // #    #    #    #    #    #    #    #    #    #    #    #
 
 
-
+/**
+ * List the paths for where all the files are
+ */
+gulp.task('view-file-paths', (done) => {
+  log(JSON.stringify(filePaths, null, 2));
+  done();
+});
 
 /**
  * View the webpack configuration
@@ -157,7 +128,7 @@ gulp.task('view-jest-config', (done) => {
  * View the styleguide (styleguidist) configuration
  */
 gulp.task('view-styleguide-config', (done) => {
-  log(JSON.stringify(require(gulpConfig.styleGuideConfig), null, 2));
+  log(JSON.stringify(require(filePaths.styleGuideConfig), null, 2));
   done();
 });
 
@@ -217,7 +188,7 @@ gulp.task('watch', (done) => {
         resolve('live reload server loaded');
       }
     );
-    liveReloadServer.watch(gulpConfig.serverSrcPublicPath);
+    liveReloadServer.watch(filePaths.serverSrcPublicAllFilesPath);
   });
 
   const nodemonPromise = new Promise((resolve, reject) => {
@@ -227,7 +198,11 @@ gulp.task('watch', (done) => {
 
       //-- for some reason the restart is calling the start to get called again.
       //-- so we listen for start
-      setTimeout(()=>{
+      if (nodemonRefreshTimeout) {
+        clearTimeout(nodemonRefreshTimeout);
+      }
+      
+      nodemonRefreshTimeout = setTimeout(()=>{
         liveReloadServer.refresh("");
       }, 1000);
 
@@ -265,7 +240,7 @@ gulp.task('watch', (done) => {
 gulp.task(
   'lint-internal',
   () => {
-    const lintPaths = [gulpConfig.internalJS, gulpConfig.localModulesJS];
+    const lintPaths = [filePaths.internalJS, filePaths.localModulesJS];
     log('Now linting:', lintPaths);
 
     const scriptStream = gulp.src(lintPaths)
@@ -276,7 +251,7 @@ gulp.task(
         },
       }))
       .pipe(eslint({
-        configFile: gulpConfig.esLintConfigPath,
+        configFile: filePaths.esLintConfigPath,
       }))
       .pipe(eslint.format())
       .pipe(eslint.failAfterError());
@@ -288,7 +263,7 @@ gulp.task(
 gulp.task(
   'watch-internal',
   () => {
-    const watchPaths = [gulpConfig.internalJS, gulpConfig.localModulesJS];
+    const watchPaths = [filePaths.internalJS, filePaths.localModulesJS];
     log('Now watching:', watchPaths);
 
     const scriptStream = gulp.watch(
@@ -305,9 +280,9 @@ gulp.task(
   'lint-server',
   () => {
     const lintPaths = [
-      gulpConfig.serverJS,
-      '!' + gulpConfig.serverSrcPublicAllFiles,
-      gulpConfig.localModulesJS
+      filePaths.serverJS,
+      '!' + filePaths.serverSrcPublicAllFiles,
+      filePaths.localModulesJS
     ];
     log('Now linting:', lintPaths);
 
@@ -319,7 +294,7 @@ gulp.task(
         },
       }))
       .pipe(eslint({
-        configFile: 'eslint.json',
+        configFile: filePaths.eslintConfig,
       }))
       .pipe(eslint.format())
       .pipe(eslint.failAfterError());
@@ -332,9 +307,9 @@ gulp.task(
   'watch-server',
   () => {
     const watchPaths = [
-      gulpConfig.serverJS,
-      '!' + gulpConfig.serverSrcPublicAllFiles,
-      gulpConfig.localModulesJS
+      filePaths.serverJS,
+      '!' + filePaths.serverSrcPublicAllFiles,
+      filePaths.localModulesJS
     ];
     log('Now watching:', watchPaths);
 
@@ -365,10 +340,10 @@ gulp.task('test', (done) => {
 
 gulp.task('watch-test', () => {
   const watchPaths = [
-    ...gulpConfig.testPatterns,
-    gulpConfig.serverJS,
-    '!' + gulpConfig.serverSrcPublic,
-    gulpConfig.localModulesJS
+    ...filePaths.testPatterns,
+    filePaths.serverJS,
+    '!' + filePaths.serverSrcPublic,
+    filePaths.localModulesJS
   ];
   log('Now watching:', watchPaths);
 
@@ -394,7 +369,7 @@ gulp.task('create-page', (done) => {
   const pagePaths = TemplateEngine.createPage(pageName);
 
   //-- do not automatically add the route yet
-  const routerPath = path.resolve(__dirname, './src/serverSrc/index.js');
+  const routerPath = filePaths.serverStartIndex;
 
   log(`
 completed writing ejs file:${pagePaths.ejs}

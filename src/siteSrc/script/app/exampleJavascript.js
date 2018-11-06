@@ -6,7 +6,7 @@ import yayIcon from '../../img/yay.png';
 
 const currentTime = require('../common/displayTime');
 
-const message = 'Hello, world.';
+const message = 'Hello, world!';
 const displayTime = `The current time is: ${currentTime}`;
 
 // debugger;

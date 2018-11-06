@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node src/serverSrc/index.js",
     "postinstall": "npm run compile",
+    "view-file-paths": "node node_modules/gulp/bin/gulp.js view-file-paths",
     "view-webpack-config": "node node_modules/gulp/bin/gulp.js view-webpack-config",
     "view-nodemon-config": "node node_modules/gulp/bin/gulp.js view-nodemon-config",
     "view-livereload-config": "node node_modules/gulp/bin/gulp.js view-livereload-config",
