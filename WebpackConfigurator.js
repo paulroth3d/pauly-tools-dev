@@ -13,10 +13,9 @@ const config = require('config');
  * determines a list of all the app files
  * @return {object} - list of fileNames for all apps under /src/siteSrc/script/app/*.js
  */
-function listAppFiles(){
+function listAppFiles(appPath){
   const results = [];
 
-  const appPath = './src/siteSrc/script/app';
   if (!fs.existsSync(appPath)) {
     console.error('appDir does not exist');
     throw new Error('appDir does not exist');
@@ -47,7 +46,13 @@ function configureWebpack(configParams) {
     eslint: true,
     node_env: process.env.NODE_ENV || 'development',
     watch: false,
+    debug: false
   });
+
+  var copyWebpackPluginDebug = null;
+  if (configSettings.debug) {
+    copyWebpackPluginDebug = 'debug';
+  }
   
   const webpackConfig = {
     //-- entries are defined dynamically down below based on the script/app folder
@@ -132,13 +137,14 @@ function configureWebpack(configParams) {
             force: true
           }
         ],
-        { debug: 'debug', copyUnmodified: true }
+        { debug: copyWebpackPluginDebug, copyUnmodified: false }
       )
     ]
   };
 
   //-- dynamically include any routes based on script/apps
-  const appFiles = listAppFiles();
+  const appFilesPath = './src/siteSrc/script/app';
+  const appFiles = listAppFiles(appFilesPath);
   const appPath = './script/app/';
   let appFile;
   for (appFile of appFiles) {
