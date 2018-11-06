@@ -13,6 +13,7 @@
     "view-nodemon-config": "node node_modules/gulp/bin/gulp.js view-nodemon-config",
     "view-livereload-config": "node node_modules/gulp/bin/gulp.js view-livereload-config",
     "view-styleguide-config": "node node_modules/gulp/bin/gulp.js view-styleguide-config",
+    "view-jest-config": "node node_modules/gulp/bin/gulp.js view-jest-config",
     "watch": "node node_modules/gulp/bin/gulp.js watch",
     "watch-internal": "node node_modules/gulp/bin/gulp.js watch-internal",
     "lint": "node node_modules/gulp/bin/gulp.js lint",

@@ -38,11 +38,12 @@ const WebpackConfigurator = require('./WebpackConfigurator');
  *  <p>see here for the livereload config settings and startup</p>
  *  <p>https://www.npmjs.com/package/livereload</p>
  **/
+/** configurator for Jest */
+const JestConfigurator = require('./JestConfigurator');
+/** config for live reload */
 const LiveReloadConfig = require('./liveReload.config');
 /** nodemon config */
 const NodemonConfig = require('./nodemon.json');
-/** jest config */
-const JestConfig = require('./jest.config.js');
 
 let webpackServer;
 let liveReloadServer;
@@ -109,6 +110,12 @@ gulp.task('view-livereload-config', (done) => {
 
 gulp.task('view-nodemon-config', (done) => {
   log(JSON.stringify(NodemonConfig, null, 2));
+  done();
+});
+
+gulp.task('view-jest-config', (done) => {
+  const jestConfig = JestConfigurator.configureJest();
+  log(JSON.stringify(jestConfig, null, 2));
   done();
 });
 
@@ -292,18 +299,10 @@ gulp.task(
 );
 
 gulp.task('test', (done) => {
+  const jestConfig = JestConfigurator.configureJest();
+
   const scriptStream = gulp.src(['src']) //-- @TODO: the files to be run are actually in the jest config
-    //.pipe(jest(JestConfig));
-    .pipe(jest({
-      "verbose": true,
-      "modulePaths": [
-        "<rootDir>/src/"
-      ],
-      "modulePathIgnorePatterns": [
-        "<rootDir>/src/serverSrc/public",
-        "<rootDir>/src/siteSrc/lib",
-      ]
-    }));
+    .pipe(jest(jestConfig));
   
   return scriptStream;
 });
