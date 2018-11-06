@@ -19,10 +19,15 @@ function handleBaseRedirect(req, resp) {
   resp.redirect(redirectURL);
 }
 
+//-- 
 const expressServer = express()
   .use(express.static(path.resolve(__dirname, 'public')))
   .set('views', path.join(__dirname, './'))
-  .set('view engine', 'ejs')
+  .set('view engine', 'ejs');
+
+//-- include any routes
+//-- get|post(stringPath, function(request,response))
+expressServer
   .get('/', handleBaseRedirect)
   .get('/heroku', (req, res) => res.render('pages/heroku'))
   .get('/javascript', (req, res) => res.render('pages/exampleJavascript'))
