@@ -39,7 +39,10 @@
 	"globals": {
 		"__dirname": true,
 		"process": true,
-		"Promise": true
+		"Promise": true,
+		//-- JEST
+		"test": true,
+		"expect": true
 	},
 	
 	//-- used instead of the standard parser for handling class properties
