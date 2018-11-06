@@ -87,13 +87,15 @@ function configureWebpack(configParams) {
     /** build rules */
     module: {
       rules: [
+        //-- load any url files in raw
         {
           test: /\.html$/,
           loader: ['raw'],
         },
+        //-- if the files are below a given size, then base64 them in
         {
-          test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-          loader: 'url-loader?limit=100000'
+          test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)$/,
+          loader: 'url-loader?limit=8192'
         },
         {
           test: /\.css$/,
@@ -110,6 +112,8 @@ function configureWebpack(configParams) {
             'sass-loader',
           ],
         },
+        //-- transpile code from es6 to something that the browser understands
+        //-- note: include properties in es6 classes through class-properties
         {
           test: /\.(js|jsx)$/,
           loader: 'babel-loader',
@@ -118,23 +122,17 @@ function configureWebpack(configParams) {
             presets: ['@babel/env', '@babel/react'],
             plugins: ['@babel/plugin-proposal-class-properties']
           },
-        },
-        {
-          test: /\.(jpe?g|png|gif|svg)$/i,
-          use: [
-            'url-loader?limit=10',
-            'img-loader'
-          ]
         }
       ],
     },
+    //-- include any other resources within the resources folder
+    //-- to the public folder as-is
     plugins: [
       new CopyWebpackPlugin(
         [
           {
             test: /\.(jpe?g|png|gif|svg)$/,
-            from: 'resources/**/*',
-            force: true
+            from: 'resources/**/*'
           }
         ],
         { debug: copyWebpackPluginDebug, copyUnmodified: false }
