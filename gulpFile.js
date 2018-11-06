@@ -72,30 +72,53 @@ gulp.task('say-hello', (done) => {
 });
 */
 
-const gulpConfig = {
-  //-- server public files used for watching when to reload
-  serverSrcPublic: 'src/serverSrc/public/**/*',
+const gulpConfig = {}
 
-  //-- js files used in setting things up - but not running the server
-  internalJS: './*.js',
+//-- source for all the server side code
+gulpConfig.serverSrcDir = 'src/serverSrc';
+//-- place for all files to be served (public directory)
+gulpConfig.serverPublicDir = `${gulpConfig.serverSrcDir}/public`;
+//-- source for all client side code
+gulpConfig.siteSrcDir = 'src/siteSrc';
+//-- place for all non-code resources used in the client side
+gulpConfig.sitePublicDir = `${gulpConfig.siteSrcDir}/public`;
 
-  //-- js files used in the server
-  serverJS: './src/serverSrc/**/*.js',
 
-  //-- local modules
-  localModulesJS: './src/local_modules/**/*.js',
+//-- server public files used for watching when to reload
+gulpConfig.serverSrcPublicAllFiles = `${gulpConfig.serverPublicDir}/**/*`;
+//-- full path for all server public files
+gulpConfig.serverSrcPublicPath = path.resolve(__dirname, gulpConfig.serverSrcPublicAllFiles);
 
-  //-- location of the styleguide config
-  styleGuideConfig: './styleguide.config',
+//-- js files used in setting things up - but not running the server
+gulpConfig.internalJS = './*.js';
+//-- js files used in the server
+gulpConfig.serverJS = './src/serverSrc/**/*.js';
 
-  //-- test patterns
-  testPattern: './src/**/*test.js'
-};
-gulpConfig.serverSrcPublicPath = path.resolve(__dirname, gulpConfig.serverSrcPublic);
+//-- local modules
+gulpConfig.localModulesJS = './src/local_modules/**/*.js';
+
+//-- location of the styleguide config
+gulpConfig.styleGuideConfig = './styleguide.config';
+
+//-- path to the eslint configuration file
 gulpConfig.esLintConfigPath = 'eslint.json';
+
+//-- test patterns
+gulpConfig.testPattern = './src/**/*test.js';
+//-- collection of all the current test patterns
 gulpConfig.testPatterns = [gulpConfig.testPattern];
 
+
+
+
+
+//#    #    #    #    #    #    #    #    #    #    #    #
 //-- start of scripts
+//#    #    #    #    #    #    #    #    #    #    #    #
+
+
+
+
 
 gulp.task('view-webpack-config', (done) => {
   const webpackConfig = WebpackConfigurator.configureWebpack();
@@ -263,7 +286,7 @@ gulp.task(
   () => {
     const scriptStream = gulp.src([
         gulpConfig.serverJS,
-        '!' + gulpConfig.serverSrcPublic,
+        '!' + gulpConfig.serverSrcPublicAllFiles,
         gulpConfig.localModulesJS
       ])
       .pipe(plumber({
@@ -288,7 +311,7 @@ gulp.task(
     const scriptStream = gulp.watch(
       [
         gulpConfig.serverJS,
-        '!' + gulpConfig.serverSrcPublic,
+        '!' + gulpConfig.serverSrcPublicAllFiles,
         gulpConfig.localModulesJS
       ],
       gulp.series(['lint-server'])
