@@ -345,7 +345,7 @@ gulp.task('watch-test', () => {
   const watchPaths = [
     ...filePaths.testPatterns,
     filePaths.serverJS,
-    '!' + filePaths.serverPublic,
+    '!' + filePaths.serverPublicAllFiles,
     filePaths.localModulesJS
   ];
   log('Now watching:', watchPaths);
