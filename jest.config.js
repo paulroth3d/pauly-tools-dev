@@ -25,7 +25,10 @@ function configureJest(configOptions){
       rootDir + filePaths.siteResourcesDir
     ],
     //-- allow for expectation messages (only if real time values are needed)
-    "setupTestFrameworkScriptFile": "jest-expect-message"
+    "setupTestFrameworkScriptFile": "jest-expect-message",
+    "moduleNameMapper": {
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|less|LESS|css|CSS|scss|SCSS)$": "<rootDir>/src/local_modules/EmptyModule"
+    }
   };
 
   return results;
