@@ -53,7 +53,7 @@ function getExpressTitleParam(request) {
 function getExpressHelpParam(request) {
   var results = true;
 
-  if (request.query.help === 'false') {
+  if (request.query.help === false || request.query.help === 'false') {
     results = false;
   }
 
@@ -87,6 +87,14 @@ function getExpressAlarmParam(request){
         results.hour += 12;
       }
 
+      //-- round to the nearest next 15
+      results.minute += 15 - (results.minute % 15);
+
+      if (results.minute >= 60) {
+        results.hour += Math.floor(results.minute/60);
+        results.minute = results.minute % 60;
+      }
+
       results.runTimer = true;
     }
   }
@@ -95,5 +103,8 @@ function getExpressAlarmParam(request){
 }
 
 module.exports = {
-  handleExpressRequest: handleExpressRequest
+  handleExpressRequest: handleExpressRequest,
+  _getExpressAlarmParam: getExpressAlarmParam,
+  _getExpressHelpParam: getExpressHelpParam,
+  _getExpressTitleParam: getExpressTitleParam
 };
