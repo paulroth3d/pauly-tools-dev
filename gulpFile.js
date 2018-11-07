@@ -251,7 +251,7 @@ gulp.task(
         },
       }))
       .pipe(eslint({
-        configFile: filePaths.esLintConfigPath,
+        configFile: filePaths.eslintConfigPath,
       }))
       .pipe(eslint.format())
       .pipe(eslint.failAfterError());

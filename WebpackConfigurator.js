@@ -12,6 +12,7 @@ const filePaths = require('./config/FilePaths');
 
 /**
  * determines a list of all the app files
+ * @param {string} appPath - the path of where the main script files are
  * @return {object} - list of fileNames for all apps under /src/siteSrc/script/app/*.js
  */
 function listAppFiles(appPath){
@@ -63,7 +64,7 @@ function configureWebpack(configParams) {
       filename: '[name].js',
     },
     
-    //context: filePaths.siteSrcPath,
+    // context: filePaths.siteSrcPath,
 
     /** include sourcemaps for debugging */
     devtool: 'source-map',
@@ -163,7 +164,7 @@ function configureWebpack(configParams) {
 
   //-- include eslint configs if eslint param was sent
   if (configSettings.eslint) {
-    let esLintPath = filePaths.eslintConfig;
+    const esLintPath = filePaths.eslintConfig;
 
     webpackConfig.module.rules.push({
       test: /\.js$/,
