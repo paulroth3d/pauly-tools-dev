@@ -10,6 +10,9 @@ const underscore = require('underscore');
 const config = require('config');
 const filePaths = require('./config/FilePaths');
 
+//-- leverage the same babelrc file within our webpack config
+const babelConfig = fs.readFileSync(path.resolve(__dirname, '.babelrc'), 'utf8');
+
 /**
  * determines a list of all the app files
  * @param {string} appPath - the path of where the main script files are
@@ -121,10 +124,7 @@ function configureWebpack(configParams) {
           test: /\.(js|jsx)$/,
           loader: 'babel-loader',
           exclude: [/node_modules/],
-          options: {
-            presets: ['@babel/env', '@babel/react'],
-            plugins: ['@babel/plugin-proposal-class-properties']
-          },
+          options: babelConfig,
         }
       ],
     },

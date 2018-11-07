@@ -2,6 +2,8 @@
  * A single place to store where things are.
  */
 
+debugger;
+
 const config = require('config');
 const path = require('path');
 
@@ -27,9 +29,9 @@ filePaths.serverPublicDir = `${filePaths.serverSrcDir}/public`;
 filePaths.serverPublicPath = path.resolve(basePath, filePaths.serverPublicDir);
 
 //-- server public files used for watching when to reload
-filePaths.serverSrcPublicAllFiles = `${filePaths.serverPublicDir}/**/*`;
+filePaths.serverPublicAllFiles = `${filePaths.serverPublicDir}/**/*`;
 //-- full path for all server public files
-filePaths.serverSrcPublicAllFilesPath = path.resolve(basePath, filePaths.serverSrcPublicAllFiles);
+filePaths.serverPublicAllFilesPath = path.resolve(basePath, filePaths.serverPublicAllFiles);
 //-- js files used in setting things up - but not running the server
 filePaths.internalJS = './*.js';
 //-- js files used in the server
@@ -49,8 +51,9 @@ filePaths.serverStartIndexPath = path.resolve(basePath, filePaths.serverStartInd
 filePaths.siteSrcDir = 'src/siteSrc';
 //-- path to the site src folder
 filePaths.siteSrcPath = path.resolve(basePath, filePaths.siteSrcDir);
-//-- place for all non-code resources used in the client side
+//-- location for all files to be copied as-is
 filePaths.siteResourcesDir = `${filePaths.siteSrcDir}/resources`;
+filePaths.siteResourcesPath = path.resolve(basePath, filePaths.siteResourcesDir);
 //-- location of all base scripts
 filePaths.siteAppDir = `${filePaths.siteSrcDir}/script/app`;
 //-- path to the base scripts
@@ -59,6 +62,8 @@ filePaths.siteAppPath = path.resolve(basePath, filePaths.siteAppDir);
 filePaths.siteComponents = `${filePaths.siteSrcDir}/script/components`;
 //-- pattern for all possible components
 filePaths.siteComponentsPattern = `${filePaths.siteComponents}/**/*.{js,jsx,ts,tsx}`;
+
+filePaths.siteResources = `${filePaths.siteSrcDir}/resources`;
 
 
 //    #    #    #    #    #    #    #    #    #    #    #

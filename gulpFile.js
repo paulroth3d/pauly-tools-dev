@@ -42,7 +42,7 @@ const WebpackConfigurator = require('./WebpackConfigurator');
  *  <p>https://www.npmjs.com/package/livereload</p>
  **/
 /** configurator for Jest */
-const JestConfigurator = require('./JestConfigurator');
+const JestConfig = require('./jest.config');
 /** config for live reload */
 const LiveReloadConfig = require('./liveReload.config');
 /** nodemon config */
@@ -119,8 +119,7 @@ gulp.task('view-nodemon-config', (done) => {
  * View the current jest configuration
  */
 gulp.task('view-jest-config', (done) => {
-  const jestConfig = JestConfigurator.configureJest();
-  log(JSON.stringify(jestConfig, null, 2));
+  log(JSON.stringify(JestConfig, null, 2));
   done();
 });
 
@@ -188,7 +187,7 @@ gulp.task('watch', (done) => {
         resolve('live reload server loaded');
       }
     );
-    liveReloadServer.watch(filePaths.serverSrcPublicAllFilesPath);
+    liveReloadServer.watch(filePaths.serverPublicAllFilesPath);
   });
 
   const nodemonPromise = new Promise((resolve, reject) => {
@@ -281,7 +280,7 @@ gulp.task(
   () => {
     const lintPaths = [
       filePaths.serverJS,
-      '!' + filePaths.serverSrcPublicAllFiles,
+      '!' + filePaths.serverPublicAllFiles,
       filePaths.localModulesJS
     ];
     log('Now linting:', lintPaths);
@@ -308,7 +307,7 @@ gulp.task(
   () => {
     const watchPaths = [
       filePaths.serverJS,
-      '!' + filePaths.serverSrcPublicAllFiles,
+      '!' + filePaths.serverPublicAllFiles,
       filePaths.localModulesJS
     ];
     log('Now watching:', watchPaths);
@@ -323,8 +322,6 @@ gulp.task(
 );
 
 gulp.task('test', (done) => {
-  const jestConfig = JestConfigurator.configureJest();
-
   const scriptStream = gulp.src(['src']) //-- @TODO: the files to be run are actually in the jest config
     .pipe(plumber({
       errorHandler: (error) => {
@@ -333,7 +330,7 @@ gulp.task('test', (done) => {
         scriptStream.emit('end');
       },
     }))
-    .pipe(jest(jestConfig));
+    .pipe(jest(JestConfig));
   
   return scriptStream;
 });
@@ -342,7 +339,7 @@ gulp.task('watch-test', () => {
   const watchPaths = [
     ...filePaths.testPatterns,
     filePaths.serverJS,
-    '!' + filePaths.serverSrcPublic,
+    '!' + filePaths.serverPublic,
     filePaths.localModulesJS
   ];
   log('Now watching:', watchPaths);
