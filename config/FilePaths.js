@@ -2,12 +2,11 @@
  * A single place to store where things are.
  */
 
-debugger;
-
 const config = require('config');
 const path = require('path');
 
-const basePath = path.resolve(__dirname, '..');
+const baseFolder = '.'
+const basePath = path.resolve(__dirname, baseFolder);
 
 const filePaths = {};
 
@@ -16,6 +15,9 @@ const filePaths = {};
 //-- so variables could build upon one another in a logical group
 //-- instead of getting separated out and generating more confusion
 
+//-- base of all the code
+filePaths.srcDir = 'src/';
+filePaths.srcPath = path.resolve()
 
 //    #    #    #    #    #    #    #    #    #    #    #
 //-- server side paths
@@ -26,12 +28,12 @@ filePaths.serverSrcDir = 'src/serverSrc';
 //-- place for all files to be served (public directory)
 filePaths.serverPublicDir = `${filePaths.serverSrcDir}/public`;
 //-- path to the public directory
-filePaths.serverPublicPath = path.resolve(basePath, filePaths.serverPublicDir);
+filePaths.serverPublicPath = path.resolve(baseFolder, filePaths.serverPublicDir);
 
 //-- server public files used for watching when to reload
 filePaths.serverPublicAllFiles = `${filePaths.serverPublicDir}/**/*`;
 //-- full path for all server public files
-filePaths.serverPublicAllFilesPath = path.resolve(basePath, filePaths.serverPublicAllFiles);
+filePaths.serverPublicAllFilesPath = path.resolve(baseFolder, filePaths.serverPublicAllFiles);
 //-- js files used in setting things up - but not running the server
 filePaths.internalJS = './*.js';
 //-- js files used in the server
@@ -40,7 +42,7 @@ filePaths.serverJS = './src/serverSrc/**/*.js';
 filePaths.serverEJS = './src/serverSrc/**/*.ejs';
 //-- server base
 filePaths.serverStartIndex = './src/serverSrc/index.js';
-filePaths.serverStartIndexPath = path.resolve(basePath, filePaths.serverStartIndex);
+filePaths.serverStartIndexPath = path.resolve(baseFolder, filePaths.serverStartIndex);
 
 
 //    #    #    #    #    #    #    #    #    #    #    #
@@ -50,14 +52,14 @@ filePaths.serverStartIndexPath = path.resolve(basePath, filePaths.serverStartInd
 //-- source for all client side code
 filePaths.siteSrcDir = 'src/siteSrc';
 //-- path to the site src folder
-filePaths.siteSrcPath = path.resolve(basePath, filePaths.siteSrcDir);
+filePaths.siteSrcPath = path.resolve(baseFolder, filePaths.siteSrcDir);
 //-- location for all files to be copied as-is
 filePaths.siteResourcesDir = `${filePaths.siteSrcDir}/resources`;
-filePaths.siteResourcesPath = path.resolve(basePath, filePaths.siteResourcesDir);
+filePaths.siteResourcesPath = path.resolve(baseFolder, filePaths.siteResourcesDir);
 //-- location of all base scripts
 filePaths.siteAppDir = `${filePaths.siteSrcDir}/script/app`;
 //-- path to the base scripts
-filePaths.siteAppPath = path.resolve(basePath, filePaths.siteAppDir);
+filePaths.siteAppPath = path.resolve(baseFolder, filePaths.siteAppDir);
 //-- path for all components
 filePaths.siteComponents = `${filePaths.siteSrcDir}/script/components`;
 //-- pattern for all possible components
@@ -82,6 +84,12 @@ filePaths.localModulesJS = './src/local_modules/**/*.js';
 filePaths.testPattern = './src/**/*test.js';
 //-- collection of all the current test patterns
 filePaths.testPatterns = [filePaths.testPattern];
+//-- path to the empty module
+//-- (used for webpack mocks when requiring css and scss files
+//-- as they aren't javascript)
+filePaths.testEmptyModulePath = path.resolve(baseFolder, 'src/testUtil/EmptyModule');
+//-- path of the test start script
+filePaths.testSetupPath = path.resolve(baseFolder, 'src/testUtil/TestSetup');
 
 
 //    #    #    #    #    #    #    #    #    #    #    #
@@ -97,7 +105,7 @@ filePaths.eslintConfig = filePaths.eslintDevelopment;
 if (config.NODE_ENV == config.PRODUCTION) {
   filePaths.eslintConfig = filePaths.eslintProduction;
 }
-filePaths.eslintConfigPath = path.resolve(basePath, filePaths.eslintConfig);
+filePaths.eslintConfigPath = path.resolve(baseFolder, filePaths.eslintConfig);
 
 //    #    #    #    #    #    #    #    #    #    #    #
 //-- nodemon

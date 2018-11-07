@@ -7,6 +7,7 @@ const ShoppingList2 = (props) => {
   return (
     <div className='shopping-list'>
       <h1>Shopping list</h1>
+      <p>{props.msg}</p>
       <ul>
         <li>Item1 - <img className='smiley' /></li>
         <li>Item2 - <img className='smiley' /></li>

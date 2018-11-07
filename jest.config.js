@@ -13,22 +13,29 @@ const filePaths = require('./config/FilePaths');
  * @returns {object} - jest configuration
  */
 function configureJest(configOptions){
-  const rootDir = '<rootDir>/';
+  
+  //-- although we can totally use the root dir
+  //-- all the paths are held in the FilePaths config file
+  //-- to ensure that all the paths are managed from a single spot.
+  //-- replacing the need for any rootDir element handled specific to Jest
+  
+  // const rootDir = '<rootDir>/';
   
   const results = {
     "verbose": true,
     "modulePaths": [
-      rootDir + 'src/'
+      filePaths.srcPath
     ],
     "modulePathIgnorePatterns": [
-      rootDir + filePaths.serverPublicDir,
-      rootDir + filePaths.siteResourcesDir
+      filePaths.serverPublicPath,
+      filePaths.siteResourcesPath
     ],
     //-- allow for expectation messages (only if real time values are needed)
     "setupTestFrameworkScriptFile": "jest-expect-message",
     "moduleNameMapper": {
-      "^.*[.](jpg|JPG|gif|GIF|png|PNG|less|LESS|css|CSS|scss|SCSS)$": "<rootDir>/src/local_modules/EmptyModule"
-    }
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|less|LESS|css|CSS|scss|SCSS)$": filePaths.testEmptyModulePath,
+    },
+    "setupTestFrameworkScriptFile": filePaths.testSetupPath
   };
 
   return results;

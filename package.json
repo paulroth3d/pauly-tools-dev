@@ -59,6 +59,8 @@
     "child-process": "1.0.2",
     "copy-webpack-plugin": "4.5.2",
     "css-loader": "1.0.0",
+    "enzyme": "3.7.0",
+    "enzyme-adapter-react-16": "1.6.0",
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-standard-react": "7.0.2",
