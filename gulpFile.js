@@ -321,7 +321,10 @@ gulp.task(
   }
 );
 
-gulp.task('test', (done) => {
+//-- for now, linting tests uses the same as watching the server
+gulp.task('lint-test', gulp.series('lint-server'));
+
+gulp.task('test-execute', (done) => {
   const scriptStream = gulp.src(['src']) //-- @TODO: the files to be run are actually in the jest config
     .pipe(plumber({
       errorHandler: (error) => {
@@ -334,6 +337,9 @@ gulp.task('test', (done) => {
   
   return scriptStream;
 });
+
+//-- test runs linting and then test execution
+gulp.task('test', gulp.series('lint-test', 'test-execute'));
 
 gulp.task('watch-test', () => {
   const watchPaths = [
