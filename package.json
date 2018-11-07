@@ -80,6 +80,7 @@
     "img-loader": "3.0.1",
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
+    "jest-expect-message": "1.0.2",
     "livereload": "0.7.0",
     "nodemon": "1.18.4",
     "react-styleguidist": "^7.3.8",

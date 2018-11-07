@@ -23,7 +23,9 @@ function configureJest(configOptions){
     "modulePathIgnorePatterns": [
       rootDir + filePaths.serverPublicDir,
       rootDir + filePaths.siteResourcesDir
-    ]
+    ],
+    //-- allow for expectation messages (only if real time values are needed)
+    "setupTestFrameworkScriptFile": "jest-expect-message"
   };
 
   return results;
