@@ -12,16 +12,8 @@ const TinyColor = require('../../lib/tinycolor');
 /** library for working with notifications */
 const NotificationUtil = require('../common/NotificationUtil');
 
-/**
- * determines a random color
- * @returns {color} - random color
- **/
-function getRandomColor() {
-  // debugger;
-  var randColor = TinyColor.random().saturate(100).setAlpha(1);
-  correctBrightness( randColor, 15 );
-  return( randColor );
-}
+/** library for working with colors */
+import ColorUtil from '../common/ColorUtil';
 
 /**
  * Resizes the title to something that is legible
@@ -34,28 +26,6 @@ function resizeTitle(){
   newSize = Math.min( newSize, 400 );
   newSize = Math.max( newSize, 150 );
   return( newSize );
-}
-
-/**
- * Detects if the color is too 'muddy' and difficult to read
- * based on an epsilon (+- amount)
- * 
- * @param {color} myColor - color to correct
- * @param {integer} muddyThreshold - the epsilon threshold to use
- * @returns {color} - updated color
- */
-function correctBrightness( myColor, muddyThreshold ){
-  var brightness = myColor.getBrightness();
-  var lower = Math.floor( 255/2 );
-  var upper = lower * 1;
-
-  lower -= muddyThreshold;
-  upper += muddyThreshold;
-
-  if( brightness >= lower && brightness <= upper ){
-    myColor.darken( muddyThreshold );
-  }
-  return( myColor );
 }
 
 /**
@@ -100,7 +70,9 @@ function initializeNotifications(){
 }
 
 jQuery(document).ready(function(){
-  var randColor = getRandomColor();
+  var randColor = ColorUtil.getRandomColor();
+  randColor = ColorUtil.correctBrightness(randColor, 15);
+
   jQuery('div.color-block').css('background', randColor.toHexString());
 
   var titleStr = window.pageParams.title;
