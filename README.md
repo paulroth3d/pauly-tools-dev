@@ -41,6 +41,27 @@ Note that gulp is used as the task manager, with more descriptions of the tasks 
 	<tr><td>doc</td><td>Runs Styleguidist (styleguide) to the output folder</td></tr>
 </table>
 
+### Development
+
+<table>
+	<tr><th>Command</th><th>Description</th></tr>
+	<tr><td>compile</td><td>Compiles using webpack into the server/public directory.</td></tr>
+	<tr><td>debug</td><td>Runs the server with inspect-brk (to support debugging)</td></tr>
+	<tr><td>watch</td><td>watches / lints / compiles both server and site code.<br />
+		If only site code is updated, then it will still liveReload as expected.<br />
+		Same for pure server code and even an intermix between the two.
+	</td></tr>
+	<tr><td>compile-watch</td><td>Alias of watch</td></tr>
+	<tr><td>internal-watch</td><td>Watch any internal (non site/server code - like gulp / etc)
+	</td></tr>
+	<tr><td>doc</td><td>Runs Styleguidist (styleguide) to the output folder</td></tr>
+	<tr><td>doc-watch</td><td>Watches the doc to generate while working on them.</td></tr>
+	<tr><td>test</td><td>Lint and run jest against the code.</td></tr>
+	<tr><td>test-watch</td><td>Watch server and site code for linting / running only the tests changed per git</td></tr>
+	<tr><td>test-watch-all</td><td>Watch server and site code for linting / running all tests tests</td></tr>
+	<tr><td>test-debug</td><td>Runs the test scripts with inspect-brk <br />(note that breakpoints won't work in jest prior to Node 8+</td></tr>
+</table>
+
 ### View Configs
 
 <table>
@@ -65,26 +86,7 @@ Note that gulp is used as the task manager, with more descriptions of the tasks 
 	<tr><td>view-jest-config</td><td>See the current jest unit testing framework config.</td></tr>
 </table>
 
-### Development
 
-<table>
-	<tr><th>Command</th><th>Description</th></tr>
-	<tr><td>compile</td><td>Compiles using webpack into the server/public directory.</td></tr>
-	<tr><td>debug</td><td>Runs the server with inspect-brk (to support debugging)</td></tr>
-	<tr><td>watch</td><td>watches / lints / compiles both server and site code.<br />
-		If only site code is updated, then it will still liveReload as expected.<br />
-		Same for pure server code and even an intermix between the two.
-	</td></tr>
-	<tr><td>compile-watch</td><td>Alias of watch</td></tr>
-	<tr><td>internal-watch</td><td>Watch any internal (non site/server code - like gulp / etc)
-	</td></tr>
-	<tr><td>doc</td><td>Runs Styleguidist (styleguide) to the output folder</td></tr>
-	<tr><td>doc-watch</td><td>Watches the doc to generate while working on them.</td></tr>
-	<tr><td>test</td><td>Lint and run jest against the code.</td></tr>
-	<tr><td>test-watch</td><td>Watch server and site code for linting / running only the tests changed per git</td></tr>
-	<tr><td>test-watch-all</td><td>Watch server and site code for linting / running all tests tests</td></tr>
-	<tr><td>test-debug</td><td>Runs the test scripts with inspect-brk <br />(note that breakpoints won't work in jest prior to Node 8+</td></tr>
-</table>
 
 ### Lint
 
