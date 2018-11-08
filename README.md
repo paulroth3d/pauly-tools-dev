@@ -4,6 +4,16 @@ A barebones Node.js app using [Express 4](http://expressjs.com/).
 
 This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
 
+# Why
+
+* Using the traditional webpack / react setups, it really doesn't allow for web request processing (POST variables, request info) at least that I've seen.
+
+* The ways that have require a proxy where we expose out the API request side and this seems to break down with more complex examples and locks me in to a url pattern to funnel to the other server - requiring a different setup if I don't want to use the proxy.
+
+* I want something that can handle both simple (no server processing) or complex (use server processing), without the need to switch setups.
+
+* of course, I also want live reloading, unit tests with coverage, shared code between the server, linting, sass/scss and all the other modern web trappings.
+
 ## Commands
 
 The commands for running are broken into these following groups:
