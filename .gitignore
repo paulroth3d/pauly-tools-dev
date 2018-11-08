@@ -14,3 +14,4 @@ docker-compose.yml
 # Ignore generated public folder
 src/serverSrc/public/**/*
 /coverage
+/styleguide
