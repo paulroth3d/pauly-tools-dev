@@ -69,8 +69,6 @@ filePaths.siteComponents = `${filePaths.siteSrcDir}/script/components`;
 //-- pattern for all possible components
 filePaths.siteComponentsPattern = `${filePaths.siteComponents}/**/*.{js,jsx,ts,tsx}`;
 
-filePaths.siteResources = `${filePaths.siteSrcDir}/resources`;
-
 
 //    #    #    #    #    #    #    #    #    #    #    #
 //-- local modules
