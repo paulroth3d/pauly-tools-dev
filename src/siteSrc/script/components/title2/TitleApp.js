@@ -27,19 +27,30 @@ class App extends Component {
     const showHelp = TitleUtil.getExpressHelpParam(urlParams);
     const alarm = TitleUtil.getExpressAlarmParam(urlParams);
 
+    //-- set the document title
+    document.title = urlParams.title;
+
     this.state = {
       title: title,
       color: randomColor.toHexString(),
       showHelp: showHelp,
       alarm: alarm
     };
+    
+    this.handleSetAlarm = this.handleSetAlarm.bind(this);
+  }
+
+  handleSetAlarm() {
+    console.log('titleapp found the alarm was clicked');
+    const targetUrl=`?title=${this.state.title}&help=${this.state.showHelp?'true':'false'}&alarm=${this.state.alarm.alarmStr}`;
+    window.location.href=targetUrl;
   }
 
   render() {
     return (
       <div className='App'>
         <TitleBar title={this.state.title} color={this.state.color} showHelp={this.state.showHelp} />
-        {this.state.showHelp ? <TitleAlarm alarmInfo={this.state.alarm} /> : null}
+        {this.state.showHelp ? <TitleAlarm alarmInfo={this.state.alarm} setAlarmHandler={this.handleSetAlarm} /> : null}
         {this.state.showHelp ? <TitleNotes /> : null}
       </div>
     );

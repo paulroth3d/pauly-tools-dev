@@ -78,31 +78,46 @@ function getExpressAlarmParam(requestParams){
     runTimer: false
   };
 
+  const now = new Date();
+  let alarmMatch = null;
   if (requestParams.alarm){
-    var alarmMatch = requestParams.alarm.match(/(\d+):(\d+)\s*([aApP][mM])?/);
-    if (alarmMatch){
-      results.hour = parseInt(alarmMatch[1]);
-      results.minute = parseInt(alarmMatch[2]);
-      results.alarmStr = requestParams.alarm;
-
-      var amPm = alarmMatch[3];
-      if (amPm && amPm.toUpperCase() === 'PM' &&
-        results.hour < 12
-      ){
-        results.hour += 12;
-      }
-
-      //-- round to the nearest next 15
-      results.minute += 15 - (results.minute % 15);
-
-      if (results.minute >= 60) {
-        results.hour += Math.floor(results.minute/60);
-        results.minute = results.minute % 60;
-      }
-
-      results.runTimer = true;
-    }
+    alarmMatch = requestParams.alarm.match(/(\d+):(\d+)\s*([aApP][mM])?/);
   }
+  if (alarmMatch){
+    results.hour = parseInt(alarmMatch[1]);
+    results.minute = parseInt(alarmMatch[2]);
+    results.alarmStr = requestParams.alarm;
+    results.runTimer = true;
+    results.amPm = alarmMatch[3];
+  } else {
+    results.hour = now.getHours();
+    results.minute = now.getMinutes();
+    results.alarmStr= `${results.hour}:${results.minute} MT`;
+    results.runTimer = false;
+    results.amPm = 'MT';
+  }
+
+  if (results.amPm && results.amPm.toUpperCase() === 'PM' &&
+    results.hour < 12
+  ){
+    results.hour += 12;
+  }
+
+  //-- round to the nearest next 15
+  results.minute += 15 - (results.minute % 15);
+
+  if (results.minute >= 60) {
+    results.hour += Math.floor(results.minute/60);
+    results.minute = results.minute % 60;
+  }
+
+  results.targetDate = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    results.hour,
+    results.minute
+  );
 
   return results;
 }

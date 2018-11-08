@@ -9,25 +9,21 @@ class TitleAlarm extends Component {
     super();
 
     const now = new Date();
-    const targetDate = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      props.alarmInfo.hour,
-      props.alarmInfo.minute
-    );
+    const targetDate = props.alarmInfo.targetDate;
     this.targetDateStr = targetDate.toLocaleString();
-
+    
     this.runTimer = props.alarmInfo.runTimer;
     if (this.runTimer) {
       NotificationUtil.scheduleNotification(props.alarmInfo.hour, props.alarmInfo.minute);
     }
 
     this.handleClick = this.handleClick.bind(this);
+    this.setAlarmHandler = props.setAlarmHandler;
   }
 
   handleClick(evt){
     console.log('alarm was clicked');
+    this.setAlarmHandler();
   }
 
   render() {
@@ -44,7 +40,8 @@ class TitleAlarm extends Component {
 }
 
 TitleAlarm.propTypes = {
-  alarmInfo: PropTypes.object
+  alarmInfo: PropTypes.object,
+  setAlarmHandler: PropTypes.function
 };
 
 export default TitleAlarm
