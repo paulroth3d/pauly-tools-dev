@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const config = require('config');
 
+const filePaths = require('.././../config/FilePaths');
+
 //-- routes
 const TitlePageRoute = require('../local_modules/routes/TitlePageRoute');
 
@@ -21,8 +23,8 @@ function handleBaseRedirect(req, resp) {
 
 //-- configure express
 const expressServer = express()
-  .use(express.static(path.resolve(__dirname, 'public')))
-  .set('views', path.join(__dirname, './'))
+  .use(express.static(filePaths.serverPublicPath))
+  .set('views', filePaths.serverSrcPath)
   .set('view engine', 'ejs');
 
 //-- include any routes

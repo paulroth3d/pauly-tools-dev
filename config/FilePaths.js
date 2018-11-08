@@ -25,10 +25,14 @@ filePaths.srcPath = path.resolve()
 
 //-- source for all the server side code
 filePaths.serverSrcDir = 'src/serverSrc';
+filePaths.serverSrcPath = path.resolve(baseFolder, filePaths.serverSrcDir);
 //-- place for all files to be served (public directory)
 filePaths.serverPublicDir = `${filePaths.serverSrcDir}/public`;
 //-- path to the public directory
 filePaths.serverPublicPath = path.resolve(baseFolder, filePaths.serverPublicDir);
+//-- place to use express ejs pages
+filePaths.serverPages = `${filePaths.serverSrcDir}/pages`;
+filePaths.serverPagesPath = path.resolve(baseFolder, filePaths.serverPages);
 
 //-- server public files used for watching when to reload
 filePaths.serverPublicAllFiles = `${filePaths.serverPublicDir}/**/*`;
