@@ -1,46 +1,46 @@
+/** Test the title util */
 
-const TitlePageRoute = require('../../local_modules/routes/TitlePageRoute');
+const TitleUtil = require('./TitleUtil');
 
-/*
-describe('test expected to fail', () => {
-  test('should fail', () => {
-    expect(2+2).toBe('love');
-  })
-})
-*/
+// const TitleUtil = require('../common/TitleUtil').default;
+
+test('Check Title sizes for Hello', () => {
+  const myTitle = 'Hello';
+  const expectedValue = 300;
+  expect(TitleUtil.resizeTitle(myTitle)).toBe(expectedValue, `Resize title with "${myTitle} should be ${expectedValue} - per the old code`);
+});
+
+test('Check color block sizes for Hello', () => {
+  const myTitle = 'Hello';
+  const expectedValue = 0.21;
+  //-- per the old code
+  expect(TitleUtil.resizeColorBlock(myTitle)).toBeCloseTo(expectedValue, 0.001);
+});
 
 describe('TitlePageRoute for initial query', () => {
   const search = 'http://localhost:5000/title2';
   const query = {};
-  const mockRequest = {
-    query: query,
-    search:search
-  };
 
   test('showHelp should be true for empty', () => {
-    const showHelp = TitlePageRoute._getExpressHelpParam(mockRequest);
+    const showHelp = TitleUtil.getExpressHelpParam(query);
     expect(showHelp).toBe(true);
   });
 
   test('timer is not set for empty', () => {
-    const alarm = TitlePageRoute._getExpressAlarmParam(mockRequest);
+    const alarm = TitleUtil.getExpressAlarmParam(query);
     expect(alarm).not.toBeNull();
     expect(alarm.runTimer).toBe(false);
   });
 });
 
-describe('TitlePageRoute for initial query', () => {
+describe('TitlePageRoute for query with title', () => {
   const query = {
     title: 'cuca'
   };
   const search = `http://localhost:5000/title2?title=${query.title}`;
-  const mockRequest = {
-    query: query,
-    search:search
-  };
 
   test('if title is the only thing sent, it should be found', () => {
-    const title = TitlePageRoute._getExpressTitleParam(mockRequest);
+    const title = TitleUtil.getExpressTitleParam(query);
     expect(title).toBe(query.title);
   });
 });
@@ -54,23 +54,19 @@ describe('Complex request with alarm', () => {
   const search = `http://localhost:5000/title2?title=${query.title}` +
     `&help=${query.help}` +
     `&alarm=${query.alarm}`;
-  const mockRequest = {
-    query: query,
-    search:search
-  };
 
   test('if title should be found if sent', () => {
-    const title = TitlePageRoute._getExpressTitleParam(mockRequest);
+    const title = TitleUtil.getExpressTitleParam(query);
     expect(title).toBe(query.title);
   });
 
   test('help should be found if sent', () => {
-    const showHelp = TitlePageRoute._getExpressHelpParam(mockRequest);
+    const showHelp = TitleUtil.getExpressHelpParam(query);
     expect(showHelp).toBe(query.help);
   });
 
   test('timer should be found if sent', () => {
-    const alarm = TitlePageRoute._getExpressAlarmParam(mockRequest);
+    const alarm = TitleUtil.getExpressAlarmParam(query);
     expect(alarm).not.toBeNull();
     //-- hours must be militiary time for js
     expect(alarm.hour).toBe(15);

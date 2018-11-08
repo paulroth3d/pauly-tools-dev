@@ -1,10 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
-import ColorBar from './ColorBar';
-import TitleBarTitle from './TitleBarTitle';
-
-import TitleUtil from '../../common/TitleUtil';
+const TitleUtil = require('../../../../local_modules/TitleUtil');
 
 const TitleBar = (props) => {
 

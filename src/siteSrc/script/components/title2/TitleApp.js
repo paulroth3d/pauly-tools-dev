@@ -6,20 +6,24 @@ import TitleBar from './TitleBar';
 import ColorUtil from '../../common/ColorUtil';
 import NotificationUtil from '../../common/NotificationUtil';
 
-import UrlUtil from '../../common/UrlUtil';
+const TitleUtil = require('../../../../local_modules/TitleUtil');
 
+/**
+ * Base application for the TitleApp
+ */
 class App extends Component {
 
   constructor(props) {
     super();
 
-    var expressParams = props.expressParams || {};
+    var urlParams = props.urlParams || {};
 
     var randomColor = ColorUtil.getRandomColor();
     randomColor = ColorUtil.correctBrightness(randomColor, 15);
 
-    const urlParams = UrlUtil.convertQueryToObject();
-    const title = urlParams.title || expressParams.defaultTitle;
+    const title = TitleUtil.getExpressTitleParam(urlParams);
+    const showHelp = TitleUtil.getExpressHelpParam(urlParams);
+    const alarm = TitleUtil.getExpressAlarmParam(urlParams);
 
     this.state = {
       title: title,
@@ -37,7 +41,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  expressParams: PropTypes.object
+  /** Object of the url parameters sent to the page */
+  urlParams: PropTypes.object
 };
 
 export default App
