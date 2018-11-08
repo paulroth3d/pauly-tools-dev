@@ -172,6 +172,7 @@ gulp.task('watch', (done) => {
   });
   log(JSON.stringify(webpackConfig));
 
+  //-- compiles and builds the files that we'll serve
   const webpackPromise = new Promise((resolve, reject) => {
     webpackServer = webpack(webpackConfig, (err, stats) => {
       if (err) {
@@ -185,7 +186,8 @@ gulp.task('watch', (done) => {
       }
     });
   });
-
+  
+  //-- livereload provides seamless connection to allow refreshing the browser
   const liveReloadPromise = new Promise((resolve, reject) => {
     liveReloadServer = LiveReload.createServer({},
       () => {
@@ -197,6 +199,8 @@ gulp.task('watch', (done) => {
     liveReloadServer.watch(filePaths.serverPublicAllFilesPath);
   });
 
+  //-- nodemon is required to run the server code (src/serverSrc/index.js)
+  //-- and to restart when it changes
   const nodemonPromise = new Promise((resolve, reject) => {
     nodemonServer = Nodemon(NodemonConfig);
     nodemonServer.on('start', () => {
