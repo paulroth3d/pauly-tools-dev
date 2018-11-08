@@ -342,30 +342,6 @@ gulp.task('test-execute', (done) => {
     console.log('only running tests against changed tests');
     JestConfig.onlyChanged = true;
   }
-
-  /*
-  //-- @TODO: we can now execute a single test if we want
-  //-- https://stackoverflow.com/questions/33633830/run-single-test-with-jest-runcli
-  log('argv.whichTests', argv.whichTests);
-  if (argv.whichTests) {
-    const whichTests=argv.whichTests;
-    var specificTests = [];
-    if (whichTests.indexOf(';') > -1) {
-      specificTests = whichTests.split(';');
-    } else if (whichTests.indexOf(',') > -1) {
-      specificTests = whichTests.split(',');
-    }
-    for (var i = 0; i < specificTests.length; i++) {
-      if (specificTests[i]) {
-        specificTests[i] = specificTests[i].trim();
-      }
-    }
-    log('targetTests:', specificTests);
-    JestConfig['_'] = specificTests;
-  }
-  // log('config', JSON.stringify(JestConfig, null, 2));
-  // done();
-  */
   
   jestCLI.runCLI(JestConfig, [JestConfig.rootDir]).then(function (_ref) {
     var results = _ref.results;
