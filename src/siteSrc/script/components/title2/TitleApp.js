@@ -27,14 +27,16 @@ class App extends Component {
 
     this.state = {
       title: title,
-      color: randomColor.toHexString()
+      color: randomColor.toHexString(),
+      showHelp: showHelp,
+      alarm: alarm
     };
   }
 
   render() {
     return (
       <div className='App'>
-        <TitleBar title={this.state.title} color={this.state.color} />
+        <TitleBar title={this.state.title} color={this.state.color} showHelp={this.state.showHelp} />
       </div>
     );
   }
