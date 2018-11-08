@@ -23,6 +23,17 @@ filePaths.srcPath = path.resolve()
 //-- server side paths
 //    #    #    #    #    #    #    #    #    #    #    #
 
+//-- build results for the site
+filePaths.siteBuildDir = 'build/site';
+filePaths.siteBuildPath = path.resolve(baseFolder, filePaths.siteBuildDir);
+//-- build results for the server code
+filePaths.serverBuildDir = 'build/server';
+filePaths.serverBuildPath = path.resolve(baseFolder, filePaths.serverBuildDir);
+
+//    #    #    #    #    #    #    #    #    #    #    #
+//-- server side paths
+//    #    #    #    #    #    #    #    #    #    #    #
+
 //-- source for all the server side code
 filePaths.serverSrcDir = 'src/serverSrc';
 filePaths.serverSrcPath = path.resolve(baseFolder, filePaths.serverSrcDir);

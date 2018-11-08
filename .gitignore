@@ -15,3 +15,4 @@ docker-compose.yml
 src/serverSrc/public/**/*
 /coverage
 /styleguide
+/build
