@@ -338,6 +338,11 @@ gulp.task('test-execute', (done) => {
   //-- set the root directory
   JestConfig.rootDir = process.cwd();
 
+  if (argv.onlyChanged) {
+    console.log('only running tests against changed tests');
+    JestConfig.onlyChanged = true;
+  }
+
   /*
   //-- @TODO: we can now execute a single test if we want
   //-- https://stackoverflow.com/questions/33633830/run-single-test-with-jest-runcli

@@ -71,7 +71,8 @@ Note that gulp is used as the task manager, with more descriptions of the tasks 
 	<tr><td>doc</td><td>Runs Styleguidist (styleguide) to the output folder</td></tr>
 	<tr><td>doc-watch</td><td>Watches the doc to generate while working on them.</td></tr>
 	<tr><td>test</td><td>Lint and run jest against the code.</td></tr>
-	<tr><td>test-watch</td><td>Watch server and site code for linting / running tests</td></tr>
+	<tr><td>test-watch</td><td>Watch server and site code for linting / running only the tests changed per git</td></tr>
+	<tr><td>test-watch-all</td><td>Watch server and site code for linting / running all tests tests</td></tr>
 	<tr><td>test-debug</td><td>Runs the test scripts with inspect-brk <br />(note that breakpoints won't work in jest prior to Node 8+</td></tr>
 </table>
 
