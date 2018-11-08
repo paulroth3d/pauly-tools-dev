@@ -18,7 +18,7 @@ const babelConfig = fs.readFileSync(path.resolve(__dirname, '.babelrc'), 'utf8')
  * @param {string} appPath - the path of where the main script files are
  * @return {object} - list of fileNames for all apps under /src/siteSrc/script/app/*.js
  */
-function listAppFiles(appPath){
+function listJsFiles(appPath){
   const results = [];
 
   if (!fs.existsSync(appPath)) {
@@ -39,6 +39,104 @@ function listAppFiles(appPath){
   }
 
   return results;
+}
+
+/**
+ * 
+ * @param {object} configParams - set of parmeters to configure webpack
+ * @return {object} - the webpack configuration to use for server code
+ */
+function configureWebpackForServer(configParams) {
+  const configSettings = underscore.defaults(configParams, {
+    eslint: true,
+    node_env: config.NODE_ENV,
+    debug: false
+  });
+
+  var copyWebpackPluginDebug = null;
+  if (configSettings.debug) {
+    copyWebpackPluginDebug = 'debug';
+  }
+
+  const webpackConfig = {
+    //-- entries are defined dynamically down below based on the script/app folder
+    entry: {},
+    output: {
+      path: filePaths.serverBuildPath,
+      filename: '[name].js',
+    },
+    
+    // context: filePaths.siteSrcPath,
+
+    /** include sourcemaps for debugging */
+    devtool: 'source-map',
+
+    /** Current development mode.
+     * Overwritten by node_env passed by config
+     * */
+    mode: 'development',
+
+    /**
+     * Look for index files at the base directory
+     */
+    resolve: {
+      mainFiles: ['index']
+    },
+
+    /** build rules */
+    module: {
+      rules: [
+        //-- transpile code from es6 to something that the browser understands
+        //-- note: include properties in es6 classes through class-properties
+        {
+          test: /\.(js|jsx)$/,
+          loader: 'babel-loader',
+          exclude: [/node_modules/],
+          options: babelConfig,
+        }
+      ],
+    }
+  };
+
+  //-- dynamically include any routes based on script/apps
+  const serverJsPath = filePaths.serverSrcPath;
+  const appFiles = listJsFiles(serverJsPath);
+  let appFile;
+  for (appFile of appFiles) {
+    webpackConfig.entry[appFile] = path.resolve(serverJsPath, appFile + '.js');
+  }
+
+  /*
+  @POSTCONDITION: the routes are based off the name of the files under script/app
+  ex: entry: {
+    exampleReact: './script/app/exampleReact.js',
+    exampleJavascript: './script/app/exampleJavascript.js'
+  },
+  */
+
+  //-- set the mode the same as NODE_ENV
+  webpackConfig.mode = configSettings.node_env;
+
+  //-- include eslint configs if eslint param was sent
+  if (configSettings.eslint) {
+    const esLintPath = filePaths.eslintConfig;
+
+    webpackConfig.module.rules.push({
+      test: /\.js$/,
+      loader: 'eslint-loader',
+      exclude: [/node_modules/, /lib/],
+      enforce: 'pre',
+      options: {
+        formatter: eslintFriendlyFormatter,
+        configFile: path.resolve(__dirname, esLintPath),
+        cache: false,
+      },
+    });
+  }
+
+  // console.log('Webpack config generated. To see the values run `npm run view-webpack-config`');
+
+  return webpackConfig;
 }
 
 /**
@@ -145,7 +243,8 @@ function configureWebpack(configParams) {
 
   //-- dynamically include any routes based on script/apps
   const appFilesPath = filePaths.siteAppPath;
-  const appFiles = listAppFiles(appFilesPath);
+  const appFiles = listJsFiles
+(appFilesPath);
   let appFile;
   for (appFile of appFiles) {
     webpackConfig.entry[appFile] = path.resolve( appFilesPath, appFile + '.js');
@@ -186,4 +285,5 @@ function configureWebpack(configParams) {
 
 module.exports = {
   configureWebpack,
+  configureWebpackForServer
 };

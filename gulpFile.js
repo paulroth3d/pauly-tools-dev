@@ -107,6 +107,15 @@ gulp.task('view-webpack-config', (done) => {
 });
 
 /**
+ * View the webpack configuration
+ */
+gulp.task('view-server-webpack-config', (done) => {
+  const webpackConfig = WebpackConfigurator.configureWebpackForServer();
+  log(JSON.stringify(webpackConfig, null, 2));
+  done();
+});
+
+/**
  * View the livereload configuration
  */
 gulp.task('view-livereload-config', (done) => {
@@ -137,6 +146,26 @@ gulp.task('view-styleguide-config', (done) => {
   log(JSON.stringify(require(filePaths.styleGuideConfig), null, 2));
   done();
 });
+
+/**
+ * Compile the server code into 
+ */
+gulp.task('webpack-server', (done) => {
+  log('executing server webpack');
+
+  const webpackConfig = WebpackConfigurator.configureWebpackForServer();
+  // log(JSON.stringify(webpackConfig));
+
+  webpack(webpackConfig, (err, stats) => {
+    if (err) {
+      log.error('Webpack', err);
+      done();
+    } else {
+      log(stats.toString());
+      done();
+    }
+  });
+})
 
 /**
  * Compile the application using webpack.
