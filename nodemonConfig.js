@@ -15,6 +15,7 @@ const nodemonConfig = {
   "events": {
     "restart": "osascript -e 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
   },
+  "script": filePaths.serverStartIndexPath,
   "ext": filePaths.nodemonWatchExtensions,
   "verbose": true,
   "watch": [
