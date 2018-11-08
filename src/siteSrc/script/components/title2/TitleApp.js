@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import TitleBar from './TitleBar';
-
 import ColorUtil from '../../common/ColorUtil';
 import NotificationUtil from '../../common/NotificationUtil';
 
 const TitleUtil = require('../../../../local_modules/TitleUtil');
+
+import TitleBar from './TitleBar';
+import TitleNotes from './TitleNotes';
 
 /**
  * Base application for the TitleApp
@@ -37,6 +38,7 @@ class App extends Component {
     return (
       <div className='App'>
         <TitleBar title={this.state.title} color={this.state.color} showHelp={this.state.showHelp} />
+        {this.state.showHelp ? <TitleNotes /> : null}
       </div>
     );
   }
