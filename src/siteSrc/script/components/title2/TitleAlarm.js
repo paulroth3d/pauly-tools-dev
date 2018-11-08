@@ -8,8 +8,8 @@ class TitleAlarm extends Component {
   constructor(props) {
     super();
 
-    let now = new Date();
-    let targetDate = new Date(
+    const now = new Date();
+    const targetDate = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
