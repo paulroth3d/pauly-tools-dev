@@ -8,6 +8,7 @@ const TitleUtil = require('../../../../local_modules/TitleUtil');
 
 import TitleBar from './TitleBar';
 import TitleNotes from './TitleNotes';
+import TitleAlarm from './TitleAlarm';
 
 /**
  * Base application for the TitleApp
@@ -38,6 +39,7 @@ class App extends Component {
     return (
       <div className='App'>
         <TitleBar title={this.state.title} color={this.state.color} showHelp={this.state.showHelp} />
+        {this.state.showHelp ? <TitleAlarm alarmInfo={this.state.alarm} /> : null}
         {this.state.showHelp ? <TitleNotes /> : null}
       </div>
     );
