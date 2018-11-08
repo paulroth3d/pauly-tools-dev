@@ -19,11 +19,8 @@ function handleExpressRequest(request, response) {
     showHelp: TitleUtil.getExpressHelpParam(requestParams)
   };
 
-  var {hour, minute, alarmStr, runTimer} = TitleUtil.getExpressAlarmParam(requestParams);
-  pageParams.hour = hour;
-  pageParams.minute = minute;
-  pageParams.alarmStr = alarmStr;
-  pageParams.runTimer = runTimer;
+  var alarmInfo = TitleUtil.getExpressAlarmParam(requestParams);
+  pageParams = {...pageParams, ...alarmInfo};
 
   response.render('pages/title', pageParams);
 }

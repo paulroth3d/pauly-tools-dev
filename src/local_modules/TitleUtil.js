@@ -74,7 +74,7 @@ function getExpressAlarmParam(requestParams){
   var results = {
     hour: 0,
     minute: 0,
-    str: '',
+    alarmStr: '',
     runTimer: false
   };
 
