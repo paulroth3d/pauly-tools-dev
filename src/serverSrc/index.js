@@ -19,7 +19,7 @@ function handleBaseRedirect(req, resp) {
   resp.redirect(redirectURL);
 }
 
-//-- 
+//-- configure express
 const expressServer = express()
   .use(express.static(path.resolve(__dirname, 'public')))
   .set('views', path.join(__dirname, './'))

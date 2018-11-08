@@ -16,7 +16,14 @@ const LiveReload = require('livereload');
 /** nodemon server - used for watch and telling livereload to fire */
 const Nodemon = require('nodemon');
 /** jest testing */
-const jest = require('gulp-jest').default;
+const jestCLI = _interopRequireDefault(require('jest-cli')).default;
+
+/**
+ * Force a module even if using commonjs
+ * @param {object} obj - either a commonjs or an es6 module
+ * @return {object} - a forced es6 module
+ */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //-- for those cases that absolutely need it
 /** allow command line arguments - like stubbing out pages */
@@ -260,7 +267,7 @@ gulp.task(
 );
 
 gulp.task(
-  'watch-internal',
+  'internal-watch',
   () => {
     const watchPaths = [filePaths.internalJS, filePaths.localModulesJS];
     log('Now watching:', watchPaths);
@@ -325,23 +332,55 @@ gulp.task(
 gulp.task('lint-test', gulp.series('lint-server'));
 
 gulp.task('test-execute', (done) => {
-  const scriptStream = gulp.src(['src']) //-- @TODO: the files to be run are actually in the jest config
-    .pipe(plumber({
-      errorHandler: (error) => {
-        log.error('Error occurred during test');
-        log.error(error.message);
-        scriptStream.emit('end');
-      },
-    }))
-    .pipe(jest(JestConfig));
+  //-- set the node env to test
+  process.env.NODE_ENV = 'test';
   
-  return scriptStream;
+  //-- set the root directory
+  JestConfig.rootDir = process.cwd();
+
+  /*
+  //-- @TODO: we can now execute a single test if we want
+  //-- https://stackoverflow.com/questions/33633830/run-single-test-with-jest-runcli
+  log('argv.whichTests', argv.whichTests);
+  if (argv.whichTests) {
+    const whichTests=argv.whichTests;
+    var specificTests = [];
+    if (whichTests.indexOf(';') > -1) {
+      specificTests = whichTests.split(';');
+    } else if (whichTests.indexOf(',') > -1) {
+      specificTests = whichTests.split(',');
+    }
+    for (var i = 0; i < specificTests.length; i++) {
+      if (specificTests[i]) {
+        specificTests[i] = specificTests[i].trim();
+      }
+    }
+    log('targetTests:', specificTests);
+    JestConfig['_'] = specificTests;
+  }
+  // log('config', JSON.stringify(JestConfig, null, 2));
+  // done();
+  */
+  
+  jestCLI.runCLI(JestConfig, [JestConfig.rootDir]).then(function (_ref) {
+    var results = _ref.results;
+
+    if (results.numFailedTests || results.numFailedTestSuites) {
+      //-- @TODO: determine how to stop gracefully
+      // done(new Error('Halting due to failed tests.'));
+      log.error('Errors occurred. Halting');
+      done();
+    } else {
+      log('no tests failed');
+      done();
+    }
+  });
 });
 
 //-- test runs linting and then test execution
 gulp.task('test', gulp.series('lint-test', 'test-execute'));
 
-gulp.task('watch-test', () => {
+gulp.task('test-watch', () => {
   const watchPaths = [
     ...filePaths.testPatterns,
     filePaths.serverJS,

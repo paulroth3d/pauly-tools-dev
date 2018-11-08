@@ -1,6 +1,14 @@
 
 const TitlePageRoute = require('../../local_modules/routes/TitlePageRoute');
 
+/*
+describe('test expected to fail', () => {
+  test('should fail', () => {
+    expect(2+2).toBe('love');
+  })
+})
+*/
+
 describe('TitlePageRoute for initial query', () => {
   const search = 'http://localhost:5000/title2';
   const query = {};
@@ -57,13 +65,11 @@ describe('Complex request with alarm', () => {
   });
 
   test('help should be found if sent', () => {
-    debugger;
     const showHelp = TitlePageRoute._getExpressHelpParam(mockRequest);
     expect(showHelp).toBe(query.help);
   });
 
   test('timer should be found if sent', () => {
-    debugger;
     const alarm = TitlePageRoute._getExpressAlarmParam(mockRequest);
     expect(alarm).not.toBeNull();
     //-- hours must be militiary time for js
