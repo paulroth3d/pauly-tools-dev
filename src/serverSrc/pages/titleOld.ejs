@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <% include ../partials/liveReload.ejs %>
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type='text/javascript'>
+      window.pageParams = {
+        title: '<%= title %>',
+        showHelp: "<%= showHelp %>" == "true",
+        hour: parseInt(<%= hour %>),
+        minute: parseInt(<%= minute %>),
+        alarmStr: "<%= alarmStr %>",
+        runTimer: "<%= runTimer %>" == "true"
+      };
+    </script>
+    <script src="/titleOld.js"></script>
+    <div class="jumbotron text-center" style="margin-top:50px;">
+      <div class="container">
+        <h1 id="title"><%= title %></h1>
+        <div class="color-block">&nbsp;</div>
+      </div>
+      <% if( showHelp === true ){ %>
+        <p>To send a title, send a param for title like: <a href="?title=ExampleTitle">?title=ExampleTitle</a></p>
+      <% } %>
+    </div>
+
+    <div class='notification-block'></div>
+
+    <% if( showHelp === true ){ %>
+    <div class="container">
+      <div class="row" style="margin:20px">
+        <div class="col-md">
+      <textarea style="width:100%; height: 100px; font-size:" placeholder="Add any notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </body>
+  </html>

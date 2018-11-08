@@ -22,7 +22,7 @@ function handleExpressRequest(request, response) {
   var alarmInfo = TitleUtil.getExpressAlarmParam(requestParams);
   pageParams = {...pageParams, ...alarmInfo};
 
-  response.render('pages/title', pageParams);
+  response.render('pages/titleOld', pageParams);
 }
 
 module.exports = {
