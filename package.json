@@ -44,9 +44,10 @@
     "moment": "2.22.2",
     "path": "0.12.7",
     "query-parse": "2.0.0",
-    "request": "^2.81.0",
     "react": "16.5.2",
-    "react-dom": "16.5.2"
+    "react-dom": "16.5.2",
+    "react-redux": "5.1.1",
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "@babel/core": "7.1.2",
