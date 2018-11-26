@@ -37,7 +37,8 @@ expressServer
   .get('/reactCourse', (req,res) => res.render('pages/reactCourse'))
   .get('/titleOld', TitlePageRoute.handleExpressRequest)
   .get('/title', (req,res) => res.render('pages/title'))
-  .get('/reduxTodo', (req, res) => res.render('pages/reduxTodo'));
+  .get('/reduxTodo', (req, res) => res.render('pages/reduxTodo'))
+  .get('/reduxAsync', (req, res) => res.render('pages/reduxAsync'));
 
 //-- anything more than providing a renderer to a page should be handled in its own separate module.
 
