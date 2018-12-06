@@ -7,3 +7,16 @@
 * figure out how to call individual tests.
 
 * Review browsersync vs liveserver
+
+# Readme todo
+
+include what the folders are for
+
+* how you add a route
+* how you add an action
+* add another page
+* add a component
+* run documentation
+
+expand the canvas app example
+this will work be
