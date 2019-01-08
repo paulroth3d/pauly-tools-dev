@@ -103,12 +103,17 @@ function getExpressAlarmParam(requestParams){
     results.hour += 12;
   }
 
+  //-- if the alarm was not set explicitly, round it
   //-- round to the nearest next 15
-  results.minute += 15 - (results.minute % 15);
+  if (!alarmMatch) {
+    results.minute += 15 - (results.minute % 15);
 
-  if (results.minute >= 60) {
-    results.hour += Math.floor(results.minute/60);
-    results.minute = results.minute % 60;
+    if (results.minute >= 60) {
+      results.hour += Math.floor(results.minute/60);
+      results.minute = results.minute % 60;
+    }
+
+    results.alarmStr= `${results.hour}:${results.minute} MT`;
   }
 
   results.targetDate = new Date(
