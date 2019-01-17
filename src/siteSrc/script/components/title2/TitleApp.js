@@ -38,6 +38,7 @@ class App extends Component {
     };
     
     this.handleSetAlarm = this.handleSetAlarm.bind(this);
+    this.handleRemoveAlarm = this.handleRemoveAlarm.bind(this);
   }
 
   handleSetAlarm() {
@@ -46,11 +47,17 @@ class App extends Component {
     window.location.href=targetUrl;
   }
 
+  handleRemoveAlarm() {
+    console.log('titleapp wants to remove the alarm');
+    const targetUrl=`?title=${this.state.title}&help=${this.state.showHelp?'true':'false'}`;
+    window.location.href=targetUrl;
+  }
+
   render() {
     return (
       <div className='App'>
         <TitleBar title={this.state.title} color={this.state.color} showHelp={this.state.showHelp} />
-        {this.state.showHelp ? <TitleAlarm alarmInfo={this.state.alarm} setAlarmHandler={this.handleSetAlarm} /> : null}
+        {this.state.showHelp ? <TitleAlarm alarmInfo={this.state.alarm} setAlarmHandler={this.handleSetAlarm} removeAlarmHandler={this.handleRemoveAlarm} /> : null}
         {this.state.showHelp ? <TitleNotes /> : null}
       </div>
     );

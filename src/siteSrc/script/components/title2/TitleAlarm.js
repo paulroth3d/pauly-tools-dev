@@ -16,14 +16,12 @@ class TitleAlarm extends Component {
 
     this.runTimer = props.alarmInfo.runTimer;
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleAddAlarmClick = this.handleAddAlarmClick.bind(this);
+    this.handleRemoveAlarmClick = this.handleRemoveAlarmClick.bind(this);
     this.setAlarmHandler = props.setAlarmHandler;
   }
 
   componentDidMount(){
-    console.log('component mounted');
-
-    console.log('schedule alarm');
     const alarmBeepElement = this.refs.alarm_beep;
 
     if (this.runTimer) {
@@ -31,22 +29,30 @@ class TitleAlarm extends Component {
     }
   }
 
-  handleClick(evt){
-    console.log('alarm was clicked');
-    const alarmBeepElement = this.refs.alarm_beep;
-    alarmBeepElement.play();
-    this.setAlarmHandler();
+  handleAddAlarmClick(evt){
+    console.log('add alarm was clicked');
+    this.props.setAlarmHandler();
+  }
+
+  handleRemoveAlarmClick(evt){
+    console.log('remove alarm was clicked');
+    this.props.removeAlarmHandler();
   }
 
   render() {
     return (
       <div className='notification-block'>
         { this.runTimer ?
-          <p>Setting notification for: {this.targetDateStr}</p>
+          <span>
+            <p>Setting notification for: {this.targetDateStr}</p>
+            <a onClick={this.handleRemoveAlarmClick}>Remove Alarm</a>
+          </span>
           :
-          <a onClick={this.handleClick}>Set an alarm for: {this.targetDateStr}</a>
+          <a onClick={this.handleAddAlarmClick}>Set an alarm for: {this.targetDateStr}</a>
         }
-        <audio id='alarm_beep' ref='alarm_beep' src={beep} type='audio/mpeg' />
+        <audio id='alarm_beep' ref='alarm_beep' preload='none'>
+          <source src={beep} type='audio/mpeg' />
+        </audio>
       </div>
     );
   }
@@ -54,7 +60,8 @@ class TitleAlarm extends Component {
 
 TitleAlarm.propTypes = {
   alarmInfo: PropTypes.object,
-  setAlarmHandler: PropTypes.function
+  setAlarmHandler: PropTypes.any,
+  removeAlarmHandler: PropTypes.any
 };
 
 export default TitleAlarm

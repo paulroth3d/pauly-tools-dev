@@ -8,6 +8,7 @@
  *  @param {integer} hour - 0-23 hour
  *  @param {integer} minute - 0-60 minute
  *  @param {string} notificationTitle (?) - title to show at the time
+ *  @param {audioElement} notificationSound - the sound to play on notification
  *  @visibility - public
  *  @returns {void}
  **/
@@ -48,20 +49,44 @@ function runNotification(notificationTitle, notificationSound){
     requireInteraction: true
   });
 
-  try {
-    const playPromise = notificationSound.play();
-    if( playPromise !== null ){
-      playPromise.catch(() => { notificationSound.play(); });
-    }
-  } catch( err ){
-    console.error('error occurred while playing sound:' + JSON.stringify(err));
-  }
+  playNotificationSound(notificationSound);
 
   notification.onclick = function(){
     window.focus();
     parent.focus();
     // alert(notificationTitle);
   };
+}
+
+/**
+ * attempt to play a sound notification
+ * @param {soundElement} notificationSoundElement - the sound element to play
+ * @returns {void}
+ */
+function playNotificationSound(notificationSoundElement){
+  const retryNotification = function(notificationSoundElement){
+    console.error('sound element there, but could not call it. retrying.');
+    setTimeout(() => {
+      playNotificationSound(notificationSoundElement);
+    }, 1000);
+  };
+
+  if( notificationSoundElement && ((typeof notificationSoundElement.play) != 'undefined') ){
+    try {
+      const playPromise = notificationSoundElement.play();
+      if( playPromise ){
+        playPromise.catch((err) => {
+          for( var prop in err){ console.log('notificationSound.err[' + prop + ']:' + (err[prop]));}
+          retryNotification(notificationSoundElement);
+        });
+      }
+    } catch(err){
+      for( var prop in err){ console.log('notificationSound.err[' + prop + ']:' + (err[prop]));}
+      retryNotification(notificationSoundElement);
+    }
+  }
+
+  return null;
 }
 
 /**
