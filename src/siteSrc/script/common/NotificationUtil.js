@@ -11,7 +11,7 @@
  *  @visibility - public
  *  @returns {void}
  **/
-function scheduleNotification(hour, minute, notificationTitle){
+function scheduleNotification(hour, minute, notificationTitle, notificationSound){
   if (typeof Notification == 'undefined'){
     alert('Notifications are only available in modern versions of Chrome, Firefox, Opera or Safari.');
   }
@@ -19,21 +19,26 @@ function scheduleNotification(hour, minute, notificationTitle){
   if( !notificationTitle ){
     notificationTitle = "";
   }
+
+  if( !notificationSound ){
+    notificationSound = null;
+  }
   
   Notification.requestPermission(function(permission){
     if( permission !== 'granted' ) return;
     
-    executeAtHourMinute( runNotification, hour, minute, [notificationTitle] );
+    executeAtHourMinute( runNotification, hour, minute, [notificationTitle, notificationSound] );
   });
 }
 
 /**
  *  Executes a notification
  *  @param {string} notificationTitle - Title to provide notification for
+ *  @param {audioElement} notificationSound - sound to play for the notification.
  *  @visibility - protected
  *  @returns {void}
  **/
-function runNotification(notificationTitle){
+function runNotification(notificationTitle, notificationSound){
   if( !notificationTitle ){
     notificationTitle = "";
   }
@@ -42,6 +47,15 @@ function runNotification(notificationTitle){
     body: "Scheduled alert",
     requireInteraction: true
   });
+
+  try {
+    const playPromise = notificationSound.play();
+    if( playPromise !== null ){
+      playPromise.catch(() => { notificationSound.play(); });
+    }
+  } catch( err ){
+    console.error('error occurred while playing sound:' + JSON.stringify(err));
+  }
 
   notification.onclick = function(){
     window.focus();

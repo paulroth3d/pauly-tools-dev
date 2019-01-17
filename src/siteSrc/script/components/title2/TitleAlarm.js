@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 const NotificationUtil = require('../../common/NotificationUtil');
 
+const beep = require('../../../resources/beeps/49165_296628-lq.mp3');
+
 class TitleAlarm extends Component {
 
   constructor(props) {
@@ -11,18 +13,28 @@ class TitleAlarm extends Component {
     const now = new Date();
     const targetDate = props.alarmInfo.targetDate;
     this.targetDateStr = targetDate.toLocaleString();
-    
+
     this.runTimer = props.alarmInfo.runTimer;
-    if (this.runTimer) {
-      NotificationUtil.scheduleNotification(props.alarmInfo.hour, props.alarmInfo.minute);
-    }
 
     this.handleClick = this.handleClick.bind(this);
     this.setAlarmHandler = props.setAlarmHandler;
   }
 
+  componentDidMount(){
+    console.log('component mounted');
+
+    console.log('schedule alarm');
+    const alarmBeepElement = this.refs.alarm_beep;
+
+    if (this.runTimer) {
+      NotificationUtil.scheduleNotification(this.props.alarmInfo.hour, this.props.alarmInfo.minute, null, alarmBeepElement);
+    }
+  }
+
   handleClick(evt){
     console.log('alarm was clicked');
+    const alarmBeepElement = this.refs.alarm_beep;
+    alarmBeepElement.play();
     this.setAlarmHandler();
   }
 
@@ -34,6 +46,7 @@ class TitleAlarm extends Component {
           :
           <a onClick={this.handleClick}>Set an alarm for: {this.targetDateStr}</a>
         }
+        <audio id='alarm_beep' ref='alarm_beep' src={beep} type='audio/mpeg' />
       </div>
     );
   }

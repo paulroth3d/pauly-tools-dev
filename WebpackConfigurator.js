@@ -98,6 +98,11 @@ function configureWebpack(configParams) {
           test: /\.html$/,
           loader: ['raw'],
         },
+        //-- audio
+        {
+          test: /\.mp3$/,
+          loader: ['url-loader']
+        },
         //-- if the files are below a given size, then base64 them in
         {
           test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)$/,
